@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+      "strict": true,
+      "target": "ES6",
+      "removeComments": true,
+      "preserveConstEnums": true,
+      "sourceRoot": "./src/",
+      "rootDir": "./src/",
+      "sourceMap": true,
+      "esModuleInterop": true,
+      "inlineSources": true
+    },
+    "exclude": [
+      "node_modules"
+    ]
+  }
