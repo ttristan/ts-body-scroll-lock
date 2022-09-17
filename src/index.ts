@@ -17,17 +17,17 @@ export {
 export default function useBodyScrollLock(
   id: string,
   containerElement: HTMLElement,
-  contentElement?: HTMLElement
+  scrollContentElement?: HTMLElement
 ) {
   registerLockIdOnBody(id);
   registerLockIdOnElement(containerElement, id);
   lockBodyScroll();
 
-  if (contentElement) {
+  if (scrollContentElement) {
     const containerHeight = containerElement.getBoundingClientRect().height;
-    const contentHeight = contentElement.getBoundingClientRect().height;
+    const contentHeight = scrollContentElement.getBoundingClientRect().height;
     if (containerHeight >= contentHeight) {
-      lockElement(containerElement);
+      lockElement(scrollContentElement);
     }
   }
 

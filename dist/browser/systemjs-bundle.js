@@ -1,6 +1,6 @@
 System.register("lib", [], function (exports_1, context_1) {
     "use strict";
-    var bodyDatasetName, elementDatasetName, bodyLockStyle, contentLockStyle, preventTouchmoveHandler, removeAllScrollLocks, removeScrollLock, lockBodyScroll, unlockBodyScroll, lockElement, unlockElement, addStyleOverride, removeStyleOverride, registerLockIdOnBody, unregisterLockIdOnBody, registerLockIdOnElement, getElementLockId, getAllLockedElements, hasActiveScrollLocks, unregisterLockIdOnElement, getBody;
+    var bodyDatasetName, elementDatasetName, bodyLockStyle, scrollContentLockStyle, preventTouchmoveHandler, removeAllScrollLocks, removeScrollLock, lockBodyScroll, unlockBodyScroll, lockElement, unlockElement, addStyleOverride, removeStyleOverride, registerLockIdOnBody, unregisterLockIdOnBody, registerLockIdOnElement, getElementLockId, getAllLockedElements, hasActiveScrollLocks, unregisterLockIdOnElement, getBody;
     var __moduleName = context_1 && context_1.id;
     return {
         setters: [],
@@ -8,7 +8,7 @@ System.register("lib", [], function (exports_1, context_1) {
             bodyDatasetName = "tsslock";
             elementDatasetName = "tsslockid";
             bodyLockStyle = ";touch-action:none!important;overscroll-behavior:none!important;overflow:hidden!important;";
-            contentLockStyle = ";overflow-y:hidden!important;";
+            scrollContentLockStyle = ";overflow-y:hidden!important;";
             preventTouchmoveHandler = (e) => {
                 try {
                     e.preventDefault();
@@ -41,11 +41,11 @@ System.register("lib", [], function (exports_1, context_1) {
                 removeStyleOverride(body, bodyLockStyle);
             };
             exports_1("lockElement", lockElement = (element) => {
-                addStyleOverride(element, contentLockStyle);
+                addStyleOverride(element, scrollContentLockStyle);
                 element.addEventListener("touchmove", preventTouchmoveHandler);
             });
             unlockElement = (element) => {
-                removeStyleOverride(element, contentLockStyle);
+                removeStyleOverride(element, scrollContentLockStyle);
                 unregisterLockIdOnElement(element);
                 element.removeEventListener("touchmove", preventTouchmoveHandler);
             };
@@ -77,7 +77,6 @@ System.register("lib", [], function (exports_1, context_1) {
                     return;
                 }
                 if (body.dataset[bodyDatasetName].includes(id)) {
-                    console.warn(`scroll lock already registered for ${id}, make sure to use unique ids for elements`);
                     return;
                 }
                 body.dataset[bodyDatasetName] += `,${id}`;
@@ -122,15 +121,15 @@ System.register("index", ["lib"], function (exports_2, context_2) {
     "use strict";
     var lib_1;
     var __moduleName = context_2 && context_2.id;
-    function useBodyScrollLock(id, containerElement, contentElement) {
+    function useBodyScrollLock(id, containerElement, scrollContentElement) {
         lib_1.registerLockIdOnBody(id);
         lib_1.registerLockIdOnElement(containerElement, id);
         lib_1.lockBodyScroll();
-        if (contentElement) {
+        if (scrollContentElement) {
             const containerHeight = containerElement.getBoundingClientRect().height;
-            const contentHeight = contentElement.getBoundingClientRect().height;
+            const contentHeight = scrollContentElement.getBoundingClientRect().height;
             if (containerHeight >= contentHeight) {
-                lib_1.lockElement(containerElement);
+                lib_1.lockElement(scrollContentElement);
             }
         }
         return {
