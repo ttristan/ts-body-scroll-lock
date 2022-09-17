@@ -4,7 +4,7 @@ exports.registerLockIdOnElement = exports.registerLockIdOnBody = exports.lockEle
 var bodyDatasetName = "tsslock";
 var elementDatasetName = "tsslockid";
 var bodyLockStyle = ";touch-action:none!important;overscroll-behavior:none!important;overflow:hidden!important;";
-var scrollContentLockStyle = ";overflow-y:hidden!important;";
+var scrollYContentLockStyle = ";overflow-y:unset!important;";
 var preventTouchmoveHandler = function (e) {
     try {
         e.preventDefault();
@@ -40,12 +40,12 @@ var unlockBodyScroll = function () {
     removeStyleOverride(body, bodyLockStyle);
 };
 var lockElement = function (element) {
-    addStyleOverride(element, scrollContentLockStyle);
+    addStyleOverride(element, scrollYContentLockStyle);
     element.addEventListener("touchmove", preventTouchmoveHandler);
 };
 exports.lockElement = lockElement;
 var unlockElement = function (element) {
-    removeStyleOverride(element, scrollContentLockStyle);
+    removeStyleOverride(element, scrollYContentLockStyle);
     unregisterLockIdOnElement(element);
     element.removeEventListener("touchmove", preventTouchmoveHandler);
 };

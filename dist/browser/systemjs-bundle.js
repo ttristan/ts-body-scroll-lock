@@ -1,6 +1,6 @@
 System.register("lib", [], function (exports_1, context_1) {
     "use strict";
-    var bodyDatasetName, elementDatasetName, bodyLockStyle, scrollContentLockStyle, preventTouchmoveHandler, removeAllScrollLocks, removeScrollLock, lockBodyScroll, unlockBodyScroll, lockElement, unlockElement, addStyleOverride, removeStyleOverride, registerLockIdOnBody, unregisterLockIdOnBody, registerLockIdOnElement, getElementLockId, getAllLockedElements, hasActiveScrollLocks, unregisterLockIdOnElement, getBody;
+    var bodyDatasetName, elementDatasetName, bodyLockStyle, scrollYContentLockStyle, preventTouchmoveHandler, removeAllScrollLocks, removeScrollLock, lockBodyScroll, unlockBodyScroll, lockElement, unlockElement, addStyleOverride, removeStyleOverride, registerLockIdOnBody, unregisterLockIdOnBody, registerLockIdOnElement, getElementLockId, getAllLockedElements, hasActiveScrollLocks, unregisterLockIdOnElement, getBody;
     var __moduleName = context_1 && context_1.id;
     return {
         setters: [],
@@ -8,7 +8,7 @@ System.register("lib", [], function (exports_1, context_1) {
             bodyDatasetName = "tsslock";
             elementDatasetName = "tsslockid";
             bodyLockStyle = ";touch-action:none!important;overscroll-behavior:none!important;overflow:hidden!important;";
-            scrollContentLockStyle = ";overflow-y:hidden!important;";
+            scrollYContentLockStyle = ";overflow-y:unset!important;";
             preventTouchmoveHandler = (e) => {
                 try {
                     e.preventDefault();
@@ -41,11 +41,11 @@ System.register("lib", [], function (exports_1, context_1) {
                 removeStyleOverride(body, bodyLockStyle);
             };
             exports_1("lockElement", lockElement = (element) => {
-                addStyleOverride(element, scrollContentLockStyle);
+                addStyleOverride(element, scrollYContentLockStyle);
                 element.addEventListener("touchmove", preventTouchmoveHandler);
             });
             unlockElement = (element) => {
-                removeStyleOverride(element, scrollContentLockStyle);
+                removeStyleOverride(element, scrollYContentLockStyle);
                 unregisterLockIdOnElement(element);
                 element.removeEventListener("touchmove", preventTouchmoveHandler);
             };
