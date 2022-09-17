@@ -8,7 +8,8 @@
       "rootDir": "./src/",
       "sourceMap": true,
       "esModuleInterop": true,
-      "inlineSources": true
+      "inlineSources": true,
+      "declaration": true
     },
     "exclude": [
       "node_modules"
