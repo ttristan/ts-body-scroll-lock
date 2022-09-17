@@ -10,11 +10,7 @@ function useBodyScrollLock(id, containerElement, scrollContentElement) {
     (0, lib_1.registerLockIdOnElement)(containerElement, id);
     (0, lib_1.lockBodyScroll)();
     if (scrollContentElement) {
-        var containerHeight = containerElement.getBoundingClientRect().height;
-        var contentHeight = scrollContentElement.getBoundingClientRect().height;
-        if (containerHeight >= contentHeight) {
-            (0, lib_1.lockElement)(scrollContentElement);
-        }
+        (0, lib_1.lockContentScrollElement)(containerElement, scrollContentElement);
     }
     return {
         removeScrollLock: function () { return (0, lib_1.removeScrollLock)(containerElement); },

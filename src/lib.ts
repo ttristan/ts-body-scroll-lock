@@ -8,11 +8,6 @@ const bodyLockStyle =
 
 // used to fix iOS body scrolling when content is not large enough to be scrolled but has overflow-y: scroll
 const scrollYContentLockStyle = ";overflow-y:unset!important;";
-const preventTouchmoveHandler = (e: TouchEvent) => {
-  try {
-    e.preventDefault();
-  } catch (e) {}
-};
 
 /**
  * Lock Handler
@@ -34,7 +29,7 @@ export const removeAllScrollLocks = () => {
 
 export const removeScrollLock = (element: HTMLElement) => {
   unregisterLockIdOnBody(element);
-  unlockElement(element);
+  unlockScrollElement(element);
 
   if (!hasActiveScrollLocks()) {
     unlockBodyScroll();
@@ -46,18 +41,31 @@ export const lockBodyScroll = () => {
   addStyleOverride(body, bodyLockStyle);
 };
 
+// used to fix iOS body scrolling when content is not large enough to be scrolled but has overflow-y: scroll
+export const lockContentScrollElement = (containerElement: HTMLElement, scrollContentElement: HTMLElement) => {
+  const containerHeight = containerElement.getBoundingClientRect().height;
+  const contentHeight = scrollContentElement.getBoundingClientRect().height;
+  // also get children height as contentHeight might be set to 100% and is scrollable
+  const contentChildrenHeight = getChildNodesHeight(scrollContentElement.children);
+
+  // only lock element if wrapper or children are larger
+  if (containerHeight >= contentHeight && containerHeight >= contentChildrenHeight) {
+    lockScrollElement(scrollContentElement);
+  }
+}
+
 const unlockBodyScroll = () => {
   const body = getBody();
 
   removeStyleOverride(body, bodyLockStyle);
 };
 
-export const lockElement = (element: HTMLElement) => {
+const lockScrollElement = (element: HTMLElement) => {
   addStyleOverride(element, scrollYContentLockStyle);
   element.addEventListener("touchmove", preventTouchmoveHandler);
 };
 
-const unlockElement = (element: HTMLElement) => {
+const unlockScrollElement = (element: HTMLElement) => {
   removeStyleOverride(element, scrollYContentLockStyle);
   unregisterLockIdOnElement(element);
   element.removeEventListener("touchmove", preventTouchmoveHandler);
@@ -82,6 +90,7 @@ const removeStyleOverride = (element: HTMLElement, styleOverride: string) => {
   if (currentStyle == null) {
     return;
   }
+  // this is more complicated than it could be but it makes sure we do not override user-defined inline styles
   const newStyle = currentStyle.replace(new RegExp(styleOverride + "$"), "");
   if (newStyle === "") {
     return element.removeAttribute("style");
@@ -154,3 +163,19 @@ const getBody = () => {
   }
   return body;
 };
+
+const preventTouchmoveHandler = (e: TouchEvent) => {
+  try {
+    e.preventDefault();
+  } catch (e) {}
+};
+
+const getChildNodesHeight = (children: HTMLCollection) => {
+  let height = 0;
+
+  for (const child of <any>children) {
+    height = height + child.getBoundingClientRect().height;
+  }
+
+  return height;
+}

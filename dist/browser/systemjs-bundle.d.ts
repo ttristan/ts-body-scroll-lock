@@ -2,7 +2,7 @@ declare module "lib" {
     export const removeAllScrollLocks: () => void;
     export const removeScrollLock: (element: HTMLElement) => void;
     export const lockBodyScroll: () => void;
-    export const lockElement: (element: HTMLElement) => void;
+    export const lockContentScrollElement: (containerElement: HTMLElement, scrollContentElement: HTMLElement) => void;
     export const registerLockIdOnBody: (id: string) => void;
     export const registerLockIdOnElement: (element: HTMLElement, id: string) => string;
 }

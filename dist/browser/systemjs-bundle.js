@@ -1,6 +1,6 @@
 System.register("lib", [], function (exports_1, context_1) {
     "use strict";
-    var bodyDatasetName, elementDatasetName, bodyLockStyle, scrollYContentLockStyle, preventTouchmoveHandler, removeAllScrollLocks, removeScrollLock, lockBodyScroll, unlockBodyScroll, lockElement, unlockElement, addStyleOverride, removeStyleOverride, registerLockIdOnBody, unregisterLockIdOnBody, registerLockIdOnElement, getElementLockId, getAllLockedElements, hasActiveScrollLocks, unregisterLockIdOnElement, getBody;
+    var bodyDatasetName, elementDatasetName, bodyLockStyle, scrollYContentLockStyle, removeAllScrollLocks, removeScrollLock, lockBodyScroll, lockContentScrollElement, unlockBodyScroll, lockScrollElement, unlockScrollElement, addStyleOverride, removeStyleOverride, registerLockIdOnBody, unregisterLockIdOnBody, registerLockIdOnElement, getElementLockId, getAllLockedElements, hasActiveScrollLocks, unregisterLockIdOnElement, getBody, preventTouchmoveHandler, getChildNodesHeight;
     var __moduleName = context_1 && context_1.id;
     return {
         setters: [],
@@ -9,12 +9,6 @@ System.register("lib", [], function (exports_1, context_1) {
             elementDatasetName = "tsslockid";
             bodyLockStyle = ";touch-action:none!important;overscroll-behavior:none!important;overflow:hidden!important;";
             scrollYContentLockStyle = ";overflow-y:unset!important;";
-            preventTouchmoveHandler = (e) => {
-                try {
-                    e.preventDefault();
-                }
-                catch (e) { }
-            };
             exports_1("removeAllScrollLocks", removeAllScrollLocks = () => {
                 getAllLockedElements().forEach((element) => {
                     if (!(element instanceof HTMLElement)) {
@@ -27,7 +21,7 @@ System.register("lib", [], function (exports_1, context_1) {
             });
             exports_1("removeScrollLock", removeScrollLock = (element) => {
                 unregisterLockIdOnBody(element);
-                unlockElement(element);
+                unlockScrollElement(element);
                 if (!hasActiveScrollLocks()) {
                     unlockBodyScroll();
                 }
@@ -36,15 +30,23 @@ System.register("lib", [], function (exports_1, context_1) {
                 const body = getBody();
                 addStyleOverride(body, bodyLockStyle);
             });
+            exports_1("lockContentScrollElement", lockContentScrollElement = (containerElement, scrollContentElement) => {
+                const containerHeight = containerElement.getBoundingClientRect().height;
+                const contentHeight = scrollContentElement.getBoundingClientRect().height;
+                const contentChildrenHeight = getChildNodesHeight(scrollContentElement.children);
+                if (containerHeight >= contentHeight && containerHeight >= contentChildrenHeight) {
+                    lockScrollElement(scrollContentElement);
+                }
+            });
             unlockBodyScroll = () => {
                 const body = getBody();
                 removeStyleOverride(body, bodyLockStyle);
             };
-            exports_1("lockElement", lockElement = (element) => {
+            lockScrollElement = (element) => {
                 addStyleOverride(element, scrollYContentLockStyle);
                 element.addEventListener("touchmove", preventTouchmoveHandler);
-            });
-            unlockElement = (element) => {
+            };
+            unlockScrollElement = (element) => {
                 removeStyleOverride(element, scrollYContentLockStyle);
                 unregisterLockIdOnElement(element);
                 element.removeEventListener("touchmove", preventTouchmoveHandler);
@@ -114,6 +116,19 @@ System.register("lib", [], function (exports_1, context_1) {
                 }
                 return body;
             };
+            preventTouchmoveHandler = (e) => {
+                try {
+                    e.preventDefault();
+                }
+                catch (e) { }
+            };
+            getChildNodesHeight = (children) => {
+                let height = 0;
+                for (const child of children) {
+                    height = height + child.getBoundingClientRect().height;
+                }
+                return height;
+            };
         }
     };
 });
@@ -126,11 +141,7 @@ System.register("index", ["lib"], function (exports_2, context_2) {
         lib_1.registerLockIdOnElement(containerElement, id);
         lib_1.lockBodyScroll();
         if (scrollContentElement) {
-            const containerHeight = containerElement.getBoundingClientRect().height;
-            const contentHeight = scrollContentElement.getBoundingClientRect().height;
-            if (containerHeight >= contentHeight) {
-                lib_1.lockElement(scrollContentElement);
-            }
+            lib_1.lockContentScrollElement(containerElement, scrollContentElement);
         }
         return {
             removeScrollLock: () => lib_1.removeScrollLock(containerElement),

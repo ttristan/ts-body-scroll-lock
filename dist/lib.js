@@ -1,16 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.registerLockIdOnElement = exports.registerLockIdOnBody = exports.lockElement = exports.lockBodyScroll = exports.removeScrollLock = exports.removeAllScrollLocks = void 0;
+exports.registerLockIdOnElement = exports.registerLockIdOnBody = exports.lockContentScrollElement = exports.lockBodyScroll = exports.removeScrollLock = exports.removeAllScrollLocks = void 0;
 var bodyDatasetName = "tsslock";
 var elementDatasetName = "tsslockid";
 var bodyLockStyle = ";touch-action:none!important;overscroll-behavior:none!important;overflow:hidden!important;";
 var scrollYContentLockStyle = ";overflow-y:unset!important;";
-var preventTouchmoveHandler = function (e) {
-    try {
-        e.preventDefault();
-    }
-    catch (e) { }
-};
 var removeAllScrollLocks = function () {
     getAllLockedElements().forEach(function (element) {
         if (!(element instanceof HTMLElement)) {
@@ -24,7 +18,7 @@ var removeAllScrollLocks = function () {
 exports.removeAllScrollLocks = removeAllScrollLocks;
 var removeScrollLock = function (element) {
     unregisterLockIdOnBody(element);
-    unlockElement(element);
+    unlockScrollElement(element);
     if (!hasActiveScrollLocks()) {
         unlockBodyScroll();
     }
@@ -35,16 +29,24 @@ var lockBodyScroll = function () {
     addStyleOverride(body, bodyLockStyle);
 };
 exports.lockBodyScroll = lockBodyScroll;
+var lockContentScrollElement = function (containerElement, scrollContentElement) {
+    var containerHeight = containerElement.getBoundingClientRect().height;
+    var contentHeight = scrollContentElement.getBoundingClientRect().height;
+    var contentChildrenHeight = getChildNodesHeight(scrollContentElement.children);
+    if (containerHeight >= contentHeight && containerHeight >= contentChildrenHeight) {
+        lockScrollElement(scrollContentElement);
+    }
+};
+exports.lockContentScrollElement = lockContentScrollElement;
 var unlockBodyScroll = function () {
     var body = getBody();
     removeStyleOverride(body, bodyLockStyle);
 };
-var lockElement = function (element) {
+var lockScrollElement = function (element) {
     addStyleOverride(element, scrollYContentLockStyle);
     element.addEventListener("touchmove", preventTouchmoveHandler);
 };
-exports.lockElement = lockElement;
-var unlockElement = function (element) {
+var unlockScrollElement = function (element) {
     removeStyleOverride(element, scrollYContentLockStyle);
     unregisterLockIdOnElement(element);
     element.removeEventListener("touchmove", preventTouchmoveHandler);
@@ -117,5 +119,19 @@ var getBody = function () {
         throw "could no locate body in DOM";
     }
     return body;
+};
+var preventTouchmoveHandler = function (e) {
+    try {
+        e.preventDefault();
+    }
+    catch (e) { }
+};
+var getChildNodesHeight = function (children) {
+    var height = 0;
+    for (var _i = 0, _a = children; _i < _a.length; _i++) {
+        var child = _a[_i];
+        height = height + child.getBoundingClientRect().height;
+    }
+    return height;
 };
 //# sourceMappingURL=lib.js.map

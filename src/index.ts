@@ -3,7 +3,7 @@ import {
   registerLockIdOnElement,
   lockBodyScroll,
   removeAllScrollLocks,
-  lockElement,
+  lockContentScrollElement,
   removeScrollLock,
 } from "./lib";
 
@@ -24,11 +24,7 @@ export default function useBodyScrollLock(
   lockBodyScroll();
 
   if (scrollContentElement) {
-    const containerHeight = containerElement.getBoundingClientRect().height;
-    const contentHeight = scrollContentElement.getBoundingClientRect().height;
-    if (containerHeight >= contentHeight) {
-      lockElement(scrollContentElement);
-    }
+    lockContentScrollElement(containerElement, scrollContentElement);
   }
 
   return {
