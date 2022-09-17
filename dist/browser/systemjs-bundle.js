@@ -54,7 +54,7 @@ System.register("lib", [], function (exports_1, context_1) {
                 if (currentStyle === null) {
                     return element.setAttribute("style", styleOverride);
                 }
-                if (currentStyle.includes(styleOverride)) {
+                if (currentStyle.indexOf(styleOverride) > -1) {
                     return;
                 }
                 return element.setAttribute("style", `${currentStyle}${styleOverride}`);
@@ -76,7 +76,7 @@ System.register("lib", [], function (exports_1, context_1) {
                     body.dataset[bodyDatasetName] = id;
                     return;
                 }
-                if (body.dataset[bodyDatasetName].includes(id)) {
+                if (body.dataset[bodyDatasetName].indexOf(id) > -1) {
                     return;
                 }
                 body.dataset[bodyDatasetName] += `,${id}`;
@@ -86,7 +86,7 @@ System.register("lib", [], function (exports_1, context_1) {
                 if (!body.dataset[bodyDatasetName]) {
                     return;
                 }
-                if (!body.dataset[bodyDatasetName].includes(",")) {
+                if (body.dataset[bodyDatasetName].indexOf(",") === -1) {
                     body.removeAttribute(`data-${bodyDatasetName}`);
                     return;
                 }

@@ -1,10 +1,10 @@
 {
   "name": "ts-body-scroll-lock",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc --outDir dist",
+    "build": "rm -rf dist && tsc --outDir dist --target ES5",
     "build:example": "tsc --module System --outFile dist/browser/systemjs-bundle.js"
   },
   "author": "Tristan Schloetel",

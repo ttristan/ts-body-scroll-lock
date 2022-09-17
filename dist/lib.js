@@ -1,107 +1,118 @@
-const bodyDatasetName = "tsslock";
-const elementDatasetName = "tsslockid";
-const bodyLockStyle = ";touch-action:none!important;overscroll-behavior:none!important;overflow:hidden!important;";
-const scrollContentLockStyle = ";overflow-y:hidden!important;";
-const preventTouchmoveHandler = (e) => {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.registerLockIdOnElement = exports.registerLockIdOnBody = exports.lockElement = exports.lockBodyScroll = exports.removeScrollLock = exports.removeAllScrollLocks = void 0;
+var bodyDatasetName = "tsslock";
+var elementDatasetName = "tsslockid";
+var bodyLockStyle = ";touch-action:none!important;overscroll-behavior:none!important;overflow:hidden!important;";
+var scrollContentLockStyle = ";overflow-y:hidden!important;";
+var preventTouchmoveHandler = function (e) {
     try {
         e.preventDefault();
     }
     catch (e) { }
 };
-export const removeAllScrollLocks = () => {
-    getAllLockedElements().forEach((element) => {
+var removeAllScrollLocks = function () {
+    getAllLockedElements().forEach(function (element) {
         if (!(element instanceof HTMLElement)) {
             console.warn("removing scroll lock for Elment", element, "is not possible, as it is not a HTMLElement");
             return;
         }
-        removeScrollLock(element);
+        (0, exports.removeScrollLock)(element);
     });
     unlockBodyScroll();
 };
-export const removeScrollLock = (element) => {
+exports.removeAllScrollLocks = removeAllScrollLocks;
+var removeScrollLock = function (element) {
     unregisterLockIdOnBody(element);
     unlockElement(element);
     if (!hasActiveScrollLocks()) {
         unlockBodyScroll();
     }
 };
-export const lockBodyScroll = () => {
-    const body = getBody();
+exports.removeScrollLock = removeScrollLock;
+var lockBodyScroll = function () {
+    var body = getBody();
     addStyleOverride(body, bodyLockStyle);
 };
-const unlockBodyScroll = () => {
-    const body = getBody();
+exports.lockBodyScroll = lockBodyScroll;
+var unlockBodyScroll = function () {
+    var body = getBody();
     removeStyleOverride(body, bodyLockStyle);
 };
-export const lockElement = (element) => {
+var lockElement = function (element) {
     addStyleOverride(element, scrollContentLockStyle);
     element.addEventListener("touchmove", preventTouchmoveHandler);
 };
-const unlockElement = (element) => {
+exports.lockElement = lockElement;
+var unlockElement = function (element) {
     removeStyleOverride(element, scrollContentLockStyle);
     unregisterLockIdOnElement(element);
     element.removeEventListener("touchmove", preventTouchmoveHandler);
 };
-const addStyleOverride = (element, styleOverride) => {
-    const currentStyle = element.getAttribute("style");
+var addStyleOverride = function (element, styleOverride) {
+    var currentStyle = element.getAttribute("style");
     if (currentStyle === null) {
         return element.setAttribute("style", styleOverride);
     }
-    if (currentStyle.includes(styleOverride)) {
+    if (currentStyle.indexOf(styleOverride) > -1) {
         return;
     }
-    return element.setAttribute("style", `${currentStyle}${styleOverride}`);
+    return element.setAttribute("style", "".concat(currentStyle).concat(styleOverride));
 };
-const removeStyleOverride = (element, styleOverride) => {
-    const currentStyle = element.getAttribute("style");
+var removeStyleOverride = function (element, styleOverride) {
+    var currentStyle = element.getAttribute("style");
     if (currentStyle == null) {
         return;
     }
-    const newStyle = currentStyle.replace(new RegExp(styleOverride + "$"), "");
+    var newStyle = currentStyle.replace(new RegExp(styleOverride + "$"), "");
     if (newStyle === "") {
         return element.removeAttribute("style");
     }
     return element.setAttribute("style", newStyle);
 };
-export const registerLockIdOnBody = (id) => {
-    const body = getBody();
+var registerLockIdOnBody = function (id) {
+    var body = getBody();
     if (!body.dataset[bodyDatasetName]) {
         body.dataset[bodyDatasetName] = id;
         return;
     }
-    if (body.dataset[bodyDatasetName].includes(id)) {
+    if (body.dataset[bodyDatasetName].indexOf(id) > -1) {
         return;
     }
-    body.dataset[bodyDatasetName] += `,${id}`;
+    body.dataset[bodyDatasetName] += ",".concat(id);
 };
-const unregisterLockIdOnBody = (element) => {
-    const body = getBody();
+exports.registerLockIdOnBody = registerLockIdOnBody;
+var unregisterLockIdOnBody = function (element) {
+    var body = getBody();
     if (!body.dataset[bodyDatasetName]) {
         return;
     }
-    if (!body.dataset[bodyDatasetName].includes(",")) {
-        body.removeAttribute(`data-${bodyDatasetName}`);
+    if (body.dataset[bodyDatasetName].indexOf(",") === -1) {
+        body.removeAttribute("data-".concat(bodyDatasetName));
         return;
     }
-    const id = getElementLockId(element);
-    body.dataset[bodyDatasetName] = body.dataset[bodyDatasetName].replace(`,${id}`, "");
+    var id = getElementLockId(element);
+    body.dataset[bodyDatasetName] = body.dataset[bodyDatasetName].replace(",".concat(id), "");
     return;
 };
-export const registerLockIdOnElement = (element, id) => {
+var registerLockIdOnElement = function (element, id) {
     return (element.dataset[elementDatasetName] = id);
 };
-const getElementLockId = (element) => {
+exports.registerLockIdOnElement = registerLockIdOnElement;
+var getElementLockId = function (element) {
     return element.dataset[elementDatasetName];
 };
-const getAllLockedElements = () => document.querySelectorAll(`[data-${elementDatasetName}]`);
-const hasActiveScrollLocks = () => {
+var getAllLockedElements = function () {
+    return document.querySelectorAll("[data-".concat(elementDatasetName, "]"));
+};
+var hasActiveScrollLocks = function () {
     return getAllLockedElements().length > 0;
 };
-const unregisterLockIdOnElement = (element) => {
-    return element.removeAttribute(`data-${elementDatasetName}`);
+var unregisterLockIdOnElement = function (element) {
+    return element.removeAttribute("data-".concat(elementDatasetName));
 };
-const getBody = () => {
-    const body = document.querySelector("body");
+var getBody = function () {
+    var body = document.querySelector("body");
     if (!body) {
         throw "could no locate body in DOM";
     }

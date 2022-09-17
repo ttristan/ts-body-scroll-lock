@@ -71,7 +71,7 @@ const addStyleOverride = (element: HTMLElement, styleOverride: string) => {
   if (currentStyle === null) {
     return element.setAttribute("style", styleOverride);
   }
-  if (currentStyle.includes(styleOverride)) {
+  if (currentStyle.indexOf(styleOverride) > -1) {
     return;
   }
   return element.setAttribute("style", `${currentStyle}${styleOverride}`);
@@ -98,7 +98,7 @@ export const registerLockIdOnBody = (id: string) => {
     body.dataset[bodyDatasetName] = id;
     return;
   }
-  if (body.dataset[bodyDatasetName].includes(id)) {
+  if (body.dataset[bodyDatasetName].indexOf(id) > -1) {
     return;
   }
   body.dataset[bodyDatasetName] += `,${id}`;
@@ -109,7 +109,7 @@ const unregisterLockIdOnBody = (element: HTMLElement) => {
   if (!body.dataset[bodyDatasetName]) {
     return;
   }
-  if (!body.dataset[bodyDatasetName].includes(",")) {
+  if (body.dataset[bodyDatasetName].indexOf(",") === -1) {
     body.removeAttribute(`data-${bodyDatasetName}`);
     return;
   }
