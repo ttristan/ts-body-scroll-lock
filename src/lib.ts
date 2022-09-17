@@ -7,7 +7,7 @@ const bodyLockStyle =
   ";touch-action:none!important;overscroll-behavior:none!important;overflow:hidden!important;";
 
 // used to fix iOS body scrolling when content is not large enough to be scrolled but has overflow-y: scroll
-const scrollContentLockStyle = ";overflow-y:hidden!important;";
+const scrollYContentLockStyle = ";overflow-y:unset!important;";
 const preventTouchmoveHandler = (e: TouchEvent) => {
   try {
     e.preventDefault();
@@ -53,12 +53,12 @@ const unlockBodyScroll = () => {
 };
 
 export const lockElement = (element: HTMLElement) => {
-  addStyleOverride(element, scrollContentLockStyle);
+  addStyleOverride(element, scrollYContentLockStyle);
   element.addEventListener("touchmove", preventTouchmoveHandler);
 };
 
 const unlockElement = (element: HTMLElement) => {
-  removeStyleOverride(element, scrollContentLockStyle);
+  removeStyleOverride(element, scrollYContentLockStyle);
   unregisterLockIdOnElement(element);
   element.removeEventListener("touchmove", preventTouchmoveHandler);
 };
