@@ -20,7 +20,10 @@
       }
       const openModalSmall = () => {
         useSmallContentExample();
-        openModalLockedSimple();
+        const container = document.querySelector(".modal-content-container");
+        const content = document.querySelector(".modal-content-short");
+        openModal();
+        lockBodyScroll();
       };
     </script>
     <main>

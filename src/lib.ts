@@ -42,17 +42,25 @@ export const lockBodyScroll = () => {
 };
 
 // used to fix iOS body scrolling when content is not large enough to be scrolled but has overflow-y: scroll
-export const lockContentScrollElement = (containerElement: HTMLElement, scrollContentElement: HTMLElement) => {
+export const lockContentScrollElement = (
+  containerElement: HTMLElement,
+  scrollContentElement: HTMLElement
+) => {
   const containerHeight = containerElement.getBoundingClientRect().height;
   const contentHeight = scrollContentElement.getBoundingClientRect().height;
   // also get children height as contentHeight might be set to 100% and is scrollable
-  const contentChildrenHeight = getChildNodesHeight(scrollContentElement.children);
+  const contentChildrenHeight = getChildNodesHeight(
+    scrollContentElement.children
+  );
 
   // only lock element if wrapper or children are larger
-  if (containerHeight >= contentHeight && containerHeight >= contentChildrenHeight) {
+  if (
+    containerHeight >= contentHeight &&
+    containerHeight >= contentChildrenHeight
+  ) {
     lockScrollElement(scrollContentElement);
   }
-}
+};
 
 const unlockBodyScroll = () => {
   const body = getBody();
@@ -62,13 +70,19 @@ const unlockBodyScroll = () => {
 
 const lockScrollElement = (element: HTMLElement) => {
   addStyleOverride(element, scrollYContentLockStyle);
-  element.addEventListener("touchmove", preventTouchmoveHandler);
+
+  if (isIOS) {
+    element.addEventListener("touchmove", preventTouchmoveHandler);
+  }
 };
 
 const unlockScrollElement = (element: HTMLElement) => {
   removeStyleOverride(element, scrollYContentLockStyle);
   unregisterLockIdOnElement(element);
-  element.removeEventListener("touchmove", preventTouchmoveHandler);
+
+  if (isIOS) {
+    element.removeEventListener("touchmove", preventTouchmoveHandler);
+  }
 };
 
 /**
@@ -178,4 +192,17 @@ const getChildNodesHeight = (children: HTMLCollection) => {
   }
 
   return height;
-}
+};
+
+const isIOS =
+  typeof window !== "undefined" && // prevent SSR context
+  ((navigator.userAgent.indexOf("Mac") > -1 && "ontouchend" in document) ||
+    (() => {
+      let isIOSDevice = false;
+      ["iPad", "iPhone", "iPod"].forEach((device: string) => {
+        if (navigator.platform.indexOf(device) > -1) {
+          isIOSDevice = true;
+        }
+      });
+      return isIOSDevice;
+    })());

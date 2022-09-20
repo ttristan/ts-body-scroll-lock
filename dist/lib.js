@@ -33,7 +33,8 @@ var lockContentScrollElement = function (containerElement, scrollContentElement)
     var containerHeight = containerElement.getBoundingClientRect().height;
     var contentHeight = scrollContentElement.getBoundingClientRect().height;
     var contentChildrenHeight = getChildNodesHeight(scrollContentElement.children);
-    if (containerHeight >= contentHeight && containerHeight >= contentChildrenHeight) {
+    if (containerHeight >= contentHeight &&
+        containerHeight >= contentChildrenHeight) {
         lockScrollElement(scrollContentElement);
     }
 };
@@ -44,12 +45,16 @@ var unlockBodyScroll = function () {
 };
 var lockScrollElement = function (element) {
     addStyleOverride(element, scrollYContentLockStyle);
-    element.addEventListener("touchmove", preventTouchmoveHandler);
+    if (isIOS) {
+        element.addEventListener("touchmove", preventTouchmoveHandler);
+    }
 };
 var unlockScrollElement = function (element) {
     removeStyleOverride(element, scrollYContentLockStyle);
     unregisterLockIdOnElement(element);
-    element.removeEventListener("touchmove", preventTouchmoveHandler);
+    if (isIOS) {
+        element.removeEventListener("touchmove", preventTouchmoveHandler);
+    }
 };
 var addStyleOverride = function (element, styleOverride) {
     var currentStyle = element.getAttribute("style");
@@ -134,4 +139,15 @@ var getChildNodesHeight = function (children) {
     }
     return height;
 };
+var isIOS = typeof window !== "undefined" &&
+    ((navigator.userAgent.indexOf("Mac") > -1 && "ontouchend" in document) ||
+        (function () {
+            var isIOSDevice = false;
+            ["iPad", "iPhone", "iPod"].forEach(function (device) {
+                if (navigator.platform.indexOf(device) > -1) {
+                    isIOSDevice = true;
+                }
+            });
+            return isIOSDevice;
+        })());
 //# sourceMappingURL=lib.js.map

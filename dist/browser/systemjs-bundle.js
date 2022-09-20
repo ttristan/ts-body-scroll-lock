@@ -1,6 +1,6 @@
 System.register("lib", [], function (exports_1, context_1) {
     "use strict";
-    var bodyDatasetName, elementDatasetName, bodyLockStyle, scrollYContentLockStyle, removeAllScrollLocks, removeScrollLock, lockBodyScroll, lockContentScrollElement, unlockBodyScroll, lockScrollElement, unlockScrollElement, addStyleOverride, removeStyleOverride, registerLockIdOnBody, unregisterLockIdOnBody, registerLockIdOnElement, getElementLockId, getAllLockedElements, hasActiveScrollLocks, unregisterLockIdOnElement, getBody, preventTouchmoveHandler, getChildNodesHeight;
+    var bodyDatasetName, elementDatasetName, bodyLockStyle, scrollYContentLockStyle, removeAllScrollLocks, removeScrollLock, lockBodyScroll, lockContentScrollElement, unlockBodyScroll, lockScrollElement, unlockScrollElement, addStyleOverride, removeStyleOverride, registerLockIdOnBody, unregisterLockIdOnBody, registerLockIdOnElement, getElementLockId, getAllLockedElements, hasActiveScrollLocks, unregisterLockIdOnElement, getBody, preventTouchmoveHandler, getChildNodesHeight, isIOS;
     var __moduleName = context_1 && context_1.id;
     return {
         setters: [],
@@ -34,7 +34,8 @@ System.register("lib", [], function (exports_1, context_1) {
                 const containerHeight = containerElement.getBoundingClientRect().height;
                 const contentHeight = scrollContentElement.getBoundingClientRect().height;
                 const contentChildrenHeight = getChildNodesHeight(scrollContentElement.children);
-                if (containerHeight >= contentHeight && containerHeight >= contentChildrenHeight) {
+                if (containerHeight >= contentHeight &&
+                    containerHeight >= contentChildrenHeight) {
                     lockScrollElement(scrollContentElement);
                 }
             });
@@ -44,12 +45,16 @@ System.register("lib", [], function (exports_1, context_1) {
             };
             lockScrollElement = (element) => {
                 addStyleOverride(element, scrollYContentLockStyle);
-                element.addEventListener("touchmove", preventTouchmoveHandler);
+                if (isIOS) {
+                    element.addEventListener("touchmove", preventTouchmoveHandler);
+                }
             };
             unlockScrollElement = (element) => {
                 removeStyleOverride(element, scrollYContentLockStyle);
                 unregisterLockIdOnElement(element);
-                element.removeEventListener("touchmove", preventTouchmoveHandler);
+                if (isIOS) {
+                    element.removeEventListener("touchmove", preventTouchmoveHandler);
+                }
             };
             addStyleOverride = (element, styleOverride) => {
                 const currentStyle = element.getAttribute("style");
@@ -129,6 +134,17 @@ System.register("lib", [], function (exports_1, context_1) {
                 }
                 return height;
             };
+            isIOS = typeof window !== "undefined" &&
+                ((navigator.userAgent.indexOf("Mac") > -1 && "ontouchend" in document) ||
+                    (() => {
+                        let isIOSDevice = false;
+                        ["iPad", "iPhone", "iPod"].forEach((device) => {
+                            if (navigator.platform.indexOf(device) > -1) {
+                                isIOSDevice = true;
+                            }
+                        });
+                        return isIOSDevice;
+                    })());
         }
     };
 });
