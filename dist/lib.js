@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.registerLockIdOnElement = exports.registerLockIdOnBody = exports.lockContentScrollElement = exports.lockBodyScroll = exports.removeScrollLock = exports.removeAllScrollLocks = void 0;
 var bodyDatasetName = "tsslock";
 var elementDatasetName = "tsslockid";
-var bodyLockStyle = ";touch-action:none!important;overscroll-behavior:none!important;overflow:hidden!important;";
+var bodyLockStyle = ";overscroll-behavior:none!important;overflow:hidden!important;";
 var scrollYContentLockStyle = ";overflow-y:unset!important;";
 var removeAllScrollLocks = function () {
     getAllLockedElements().forEach(function (element) {

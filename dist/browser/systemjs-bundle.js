@@ -7,7 +7,7 @@ System.register("lib", [], function (exports_1, context_1) {
         execute: function () {
             bodyDatasetName = "tsslock";
             elementDatasetName = "tsslockid";
-            bodyLockStyle = ";touch-action:none!important;overscroll-behavior:none!important;overflow:hidden!important;";
+            bodyLockStyle = ";overscroll-behavior:none!important;overflow:hidden!important;";
             scrollYContentLockStyle = ";overflow-y:unset!important;";
             exports_1("removeAllScrollLocks", removeAllScrollLocks = () => {
                 getAllLockedElements().forEach((element) => {
