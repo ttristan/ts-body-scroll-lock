@@ -4,7 +4,7 @@
 const bodyDatasetName = "tsslock";
 const elementDatasetName = "tsslockid";
 const bodyLockStyle =
-  ";touch-action:none!important;overscroll-behavior:none!important;overflow:hidden!important;";
+  ";overscroll-behavior:none!important;overflow:hidden!important;";
 
 // used to fix iOS body scrolling when content is not large enough to be scrolled but has overflow-y: scroll
 const scrollYContentLockStyle = ";overflow-y:unset!important;";
