@@ -12,7 +12,7 @@ const scrollYContentLockStyle = ";overflow-y:unset!important;";
 /**
  * Lock Handler
  */
-export const removeAllScrollLocks = () => {
+export const removeAllScrollLocks = (observer: ResizeObserver | null) => {
   getAllLockedElements().forEach((element) => {
     if (!(element instanceof HTMLElement)) {
       console.warn(
@@ -22,16 +22,16 @@ export const removeAllScrollLocks = () => {
       );
       return;
     }
-    removeScrollLock(element);
+    removeScrollLock(element, observer);
   });
   unlockBodyScroll();
 };
 
-export const removeScrollLock = (element: HTMLElement) => {
+export const removeScrollLock = (element: HTMLElement, observer: ResizeObserver | null) => {
   unregisterLockIdOnBody(element);
   unlockScrollElement(element);
-  if (lockContentScrollResizeObserver) {
-    lockContentScrollResizeObserver.disconnect();
+  if (observer) {
+    observer.disconnect();
   }
 
   if (!hasActiveScrollLocks()) {
@@ -44,18 +44,23 @@ export const lockBodyScroll = () => {
   addStyleOverride(body, bodyLockStyle);
 };
 
-export const lockContentScrollResizeObserver = new ResizeObserver((entries) => {
-  if (entries) {
-    entries.map((entry) => {
-      console.log(entry);
-    })
-    const scrollContentElement = entries[0].target.parentElement;
-    if (scrollContentElement && scrollContentElement.parentElement) {
-      unlockScrollElement(scrollContentElement);
-      lockContentScrollElement(scrollContentElement.parentElement, scrollContentElement)
-    }
+export const getLockContentScrollResizeObserver = (): ResizeObserver | null => {
+  if (!document) {
+    return null;
   }
-})
+  return new ResizeObserver((entries) => {
+    if (entries) {
+      entries.map((entry) => {
+        console.log(entry);
+      })
+      const scrollContentElement = entries[0].target.parentElement;
+      if (scrollContentElement && scrollContentElement.parentElement) {
+        unlockScrollElement(scrollContentElement);
+        lockContentScrollElement(scrollContentElement.parentElement, scrollContentElement)
+      }
+    }
+  });
+}
 
 // used to fix iOS body scrolling when content is not large enough to be scrolled but has overflow-y: scroll
 export const lockContentScrollElement = (

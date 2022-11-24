@@ -1,26 +1,26 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.registerLockIdOnElement = exports.registerLockIdOnBody = exports.lockContentScrollElement = exports.lockContentScrollResizeObserver = exports.lockBodyScroll = exports.removeScrollLock = exports.removeAllScrollLocks = void 0;
+exports.registerLockIdOnElement = exports.registerLockIdOnBody = exports.lockContentScrollElement = exports.getLockContentScrollResizeObserver = exports.lockBodyScroll = exports.removeScrollLock = exports.removeAllScrollLocks = void 0;
 var bodyDatasetName = "tsslock";
 var elementDatasetName = "tsslockid";
 var bodyLockStyle = ";overscroll-behavior:none!important;overflow:hidden!important;";
 var scrollYContentLockStyle = ";overflow-y:unset!important;";
-var removeAllScrollLocks = function () {
+var removeAllScrollLocks = function (observer) {
     getAllLockedElements().forEach(function (element) {
         if (!(element instanceof HTMLElement)) {
             console.warn("removing scroll lock for Elment", element, "is not possible, as it is not a HTMLElement");
             return;
         }
-        (0, exports.removeScrollLock)(element);
+        (0, exports.removeScrollLock)(element, observer);
     });
     unlockBodyScroll();
 };
 exports.removeAllScrollLocks = removeAllScrollLocks;
-var removeScrollLock = function (element) {
+var removeScrollLock = function (element, observer) {
     unregisterLockIdOnBody(element);
     unlockScrollElement(element);
-    if (exports.lockContentScrollResizeObserver) {
-        exports.lockContentScrollResizeObserver.disconnect();
+    if (observer) {
+        observer.disconnect();
     }
     if (!hasActiveScrollLocks()) {
         unlockBodyScroll();
@@ -32,18 +32,24 @@ var lockBodyScroll = function () {
     addStyleOverride(body, bodyLockStyle);
 };
 exports.lockBodyScroll = lockBodyScroll;
-exports.lockContentScrollResizeObserver = new ResizeObserver(function (entries) {
-    if (entries) {
-        entries.map(function (entry) {
-            console.log(entry);
-        });
-        var scrollContentElement = entries[0].target.parentElement;
-        if (scrollContentElement && scrollContentElement.parentElement) {
-            unlockScrollElement(scrollContentElement);
-            (0, exports.lockContentScrollElement)(scrollContentElement.parentElement, scrollContentElement);
-        }
+var getLockContentScrollResizeObserver = function () {
+    if (!document) {
+        return null;
     }
-});
+    return new ResizeObserver(function (entries) {
+        if (entries) {
+            entries.map(function (entry) {
+                console.log(entry);
+            });
+            var scrollContentElement = entries[0].target.parentElement;
+            if (scrollContentElement && scrollContentElement.parentElement) {
+                unlockScrollElement(scrollContentElement);
+                (0, exports.lockContentScrollElement)(scrollContentElement.parentElement, scrollContentElement);
+            }
+        }
+    });
+};
+exports.getLockContentScrollResizeObserver = getLockContentScrollResizeObserver;
 var lockContentScrollElement = function (containerElement, scrollContentElement) {
     var containerHeight = containerElement.getBoundingClientRect().height;
     var contentHeight = scrollContentElement.getBoundingClientRect().height;
@@ -72,7 +78,6 @@ var unlockScrollElement = function (element) {
     }
 };
 var addStyleOverride = function (element, styleOverride) {
-    console.log('hello');
     var currentStyle = element.getAttribute("style");
     if (currentStyle === null) {
         console.log('set style');

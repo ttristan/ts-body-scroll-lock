@@ -9,15 +9,18 @@ function useBodyScrollLock(id, containerElement, scrollContentElement) {
     (0, lib_1.registerLockIdOnBody)(id);
     (0, lib_1.registerLockIdOnElement)(containerElement, id);
     (0, lib_1.lockBodyScroll)();
-    if (scrollContentElement && lib_1.lockContentScrollResizeObserver) {
+    console.log(scrollContentElement);
+    var observer = (0, lib_1.getLockContentScrollResizeObserver)();
+    if (scrollContentElement && observer) {
         (0, lib_1.lockContentScrollElement)(containerElement, scrollContentElement);
         Array.from(scrollContentElement.children).forEach(function (child) {
-            lib_1.lockContentScrollResizeObserver.observe(child);
+            console.log(child);
+            observer.observe(child);
         });
     }
     return {
-        removeScrollLock: function () { return (0, lib_1.removeScrollLock)(containerElement); },
-        removeAllScrollLocks: lib_1.removeAllScrollLocks,
+        removeScrollLock: function () { return (0, lib_1.removeScrollLock)(containerElement, observer); },
+        removeAllScrollLocks: function () { return (0, lib_1.removeAllScrollLocks)(observer); },
     };
 }
 exports.default = useBodyScrollLock;
