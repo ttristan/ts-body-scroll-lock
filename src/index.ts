@@ -4,7 +4,7 @@ import {
   lockBodyScroll,
   removeAllScrollLocks,
   lockContentScrollElement,
-  removeScrollLock,
+  removeScrollLock, lockContentScrollResizeObserver,
 } from "./lib";
 
 export {
@@ -25,6 +25,9 @@ export default function useBodyScrollLock(
 
   if (scrollContentElement) {
     lockContentScrollElement(containerElement, scrollContentElement);
+    Array.from(scrollContentElement.children).forEach((child: Element) => {
+      lockContentScrollResizeObserver.observe(child)
+    })
   }
 
   return {

@@ -11,6 +11,9 @@ function useBodyScrollLock(id, containerElement, scrollContentElement) {
     (0, lib_1.lockBodyScroll)();
     if (scrollContentElement) {
         (0, lib_1.lockContentScrollElement)(containerElement, scrollContentElement);
+        Array.from(scrollContentElement.children).forEach(function (child) {
+            lib_1.lockContentScrollResizeObserver.observe(child);
+        });
     }
     return {
         removeScrollLock: function () { return (0, lib_1.removeScrollLock)(containerElement); },

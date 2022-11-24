@@ -30,6 +30,7 @@ export const removeAllScrollLocks = () => {
 export const removeScrollLock = (element: HTMLElement) => {
   unregisterLockIdOnBody(element);
   unlockScrollElement(element);
+  lockContentScrollResizeObserver.disconnect();
 
   if (!hasActiveScrollLocks()) {
     unlockBodyScroll();
@@ -40,6 +41,19 @@ export const lockBodyScroll = () => {
   const body = getBody();
   addStyleOverride(body, bodyLockStyle);
 };
+
+export const lockContentScrollResizeObserver = new ResizeObserver((entries) => {
+  if (entries) {
+    entries.map((entry) => {
+      console.log(entry);
+    })
+    const scrollContentElement = entries[0].target.parentElement;
+    if (scrollContentElement && scrollContentElement.parentElement) {
+      unlockScrollElement(scrollContentElement);
+      lockContentScrollElement(scrollContentElement.parentElement, scrollContentElement)
+    }
+  }
+})
 
 // used to fix iOS body scrolling when content is not large enough to be scrolled but has overflow-y: scroll
 export const lockContentScrollElement = (

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.registerLockIdOnElement = exports.registerLockIdOnBody = exports.lockContentScrollElement = exports.lockBodyScroll = exports.removeScrollLock = exports.removeAllScrollLocks = void 0;
+exports.registerLockIdOnElement = exports.registerLockIdOnBody = exports.lockContentScrollElement = exports.lockContentScrollResizeObserver = exports.lockBodyScroll = exports.removeScrollLock = exports.removeAllScrollLocks = void 0;
 var bodyDatasetName = "tsslock";
 var elementDatasetName = "tsslockid";
 var bodyLockStyle = ";overscroll-behavior:none!important;overflow:hidden!important;";
@@ -19,6 +19,7 @@ exports.removeAllScrollLocks = removeAllScrollLocks;
 var removeScrollLock = function (element) {
     unregisterLockIdOnBody(element);
     unlockScrollElement(element);
+    exports.lockContentScrollResizeObserver.disconnect();
     if (!hasActiveScrollLocks()) {
         unlockBodyScroll();
     }
@@ -29,6 +30,18 @@ var lockBodyScroll = function () {
     addStyleOverride(body, bodyLockStyle);
 };
 exports.lockBodyScroll = lockBodyScroll;
+exports.lockContentScrollResizeObserver = new ResizeObserver(function (entries) {
+    if (entries) {
+        entries.map(function (entry) {
+            console.log(entry);
+        });
+        var scrollContentElement = entries[0].target.parentElement;
+        if (scrollContentElement && scrollContentElement.parentElement) {
+            unlockScrollElement(scrollContentElement);
+            (0, exports.lockContentScrollElement)(scrollContentElement.parentElement, scrollContentElement);
+        }
+    }
+});
 var lockContentScrollElement = function (containerElement, scrollContentElement) {
     var containerHeight = containerElement.getBoundingClientRect().height;
     var contentHeight = scrollContentElement.getBoundingClientRect().height;
