@@ -30,7 +30,9 @@ export const removeAllScrollLocks = () => {
 export const removeScrollLock = (element: HTMLElement) => {
   unregisterLockIdOnBody(element);
   unlockScrollElement(element);
-  lockContentScrollResizeObserver.disconnect();
+  if (lockContentScrollResizeObserver) {
+    lockContentScrollResizeObserver.disconnect();
+  }
 
   if (!hasActiveScrollLocks()) {
     unlockBodyScroll();

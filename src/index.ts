@@ -23,7 +23,7 @@ export default function useBodyScrollLock(
   registerLockIdOnElement(containerElement, id);
   lockBodyScroll();
 
-  if (scrollContentElement) {
+  if (scrollContentElement && lockContentScrollResizeObserver) {
     lockContentScrollElement(containerElement, scrollContentElement);
     Array.from(scrollContentElement.children).forEach((child: Element) => {
       lockContentScrollResizeObserver.observe(child)
