@@ -50,9 +50,6 @@ export const getLockContentScrollResizeObserver = (): ResizeObserver | null => {
   }
   return new ResizeObserver((entries) => {
     if (entries) {
-      entries.map((entry) => {
-        console.log(entry);
-      })
       const scrollContentElement = entries[0].target.parentElement;
       if (scrollContentElement && scrollContentElement.parentElement) {
         unlockScrollElement(scrollContentElement);
@@ -112,14 +109,11 @@ const unlockScrollElement = (element: HTMLElement) => {
 const addStyleOverride = (element: HTMLElement, styleOverride: string) => {
   const currentStyle = element.getAttribute("style");
   if (currentStyle === null) {
-    console.log('set style');
     return element.setAttribute("style", styleOverride);
   }
   if (currentStyle.indexOf(styleOverride) > -1) {
-    console.log('return');
     return;
   }
-  console.log('add style');
   return element.setAttribute("style", `${currentStyle}${styleOverride}`);
 };
 

@@ -39,9 +39,6 @@ System.register("lib", [], function (exports_1, context_1) {
                 }
                 return new ResizeObserver((entries) => {
                     if (entries) {
-                        entries.map((entry) => {
-                            console.log(entry);
-                        });
                         const scrollContentElement = entries[0].target.parentElement;
                         if (scrollContentElement && scrollContentElement.parentElement) {
                             unlockScrollElement(scrollContentElement);
@@ -79,14 +76,11 @@ System.register("lib", [], function (exports_1, context_1) {
             addStyleOverride = (element, styleOverride) => {
                 const currentStyle = element.getAttribute("style");
                 if (currentStyle === null) {
-                    console.log('set style');
                     return element.setAttribute("style", styleOverride);
                 }
                 if (currentStyle.indexOf(styleOverride) > -1) {
-                    console.log('return');
                     return;
                 }
-                console.log('add style');
                 return element.setAttribute("style", `${currentStyle}${styleOverride}`);
             };
             removeStyleOverride = (element, styleOverride) => {
@@ -179,12 +173,10 @@ System.register("index", ["lib"], function (exports_2, context_2) {
         lib_1.registerLockIdOnBody(id);
         lib_1.registerLockIdOnElement(containerElement, id);
         lib_1.lockBodyScroll();
-        console.log(scrollContentElement);
         const observer = lib_1.getLockContentScrollResizeObserver();
         if (scrollContentElement && observer) {
             lib_1.lockContentScrollElement(containerElement, scrollContentElement);
             Array.from(scrollContentElement.children).forEach((child) => {
-                console.log(child);
                 observer.observe(child);
             });
         }

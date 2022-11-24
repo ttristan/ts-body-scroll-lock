@@ -23,13 +23,10 @@ export default function useBodyScrollLock(
   registerLockIdOnElement(containerElement, id);
   lockBodyScroll();
 
-  console.log(scrollContentElement);
-
   const observer = getLockContentScrollResizeObserver()
   if (scrollContentElement && observer) {
     lockContentScrollElement(containerElement, scrollContentElement);
     Array.from(scrollContentElement.children).forEach((child: Element) => {
-      console.log(child);
       observer.observe(child)
     })
   }

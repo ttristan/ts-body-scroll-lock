@@ -38,9 +38,6 @@ var getLockContentScrollResizeObserver = function () {
     }
     return new ResizeObserver(function (entries) {
         if (entries) {
-            entries.map(function (entry) {
-                console.log(entry);
-            });
             var scrollContentElement = entries[0].target.parentElement;
             if (scrollContentElement && scrollContentElement.parentElement) {
                 unlockScrollElement(scrollContentElement);
@@ -80,14 +77,11 @@ var unlockScrollElement = function (element) {
 var addStyleOverride = function (element, styleOverride) {
     var currentStyle = element.getAttribute("style");
     if (currentStyle === null) {
-        console.log('set style');
         return element.setAttribute("style", styleOverride);
     }
     if (currentStyle.indexOf(styleOverride) > -1) {
-        console.log('return');
         return;
     }
-    console.log('add style');
     return element.setAttribute("style", "".concat(currentStyle).concat(styleOverride));
 };
 var removeStyleOverride = function (element, styleOverride) {
