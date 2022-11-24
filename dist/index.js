@@ -9,7 +9,7 @@ function useBodyScrollLock(id, containerElement, scrollContentElement) {
     (0, lib_1.registerLockIdOnBody)(id);
     (0, lib_1.registerLockIdOnElement)(containerElement, id);
     (0, lib_1.lockBodyScroll)();
-    if (scrollContentElement) {
+    if (scrollContentElement && lib_1.lockContentScrollResizeObserver) {
         (0, lib_1.lockContentScrollElement)(containerElement, scrollContentElement);
         Array.from(scrollContentElement.children).forEach(function (child) {
             lib_1.lockContentScrollResizeObserver.observe(child);

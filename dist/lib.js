@@ -19,7 +19,9 @@ exports.removeAllScrollLocks = removeAllScrollLocks;
 var removeScrollLock = function (element) {
     unregisterLockIdOnBody(element);
     unlockScrollElement(element);
-    exports.lockContentScrollResizeObserver.disconnect();
+    if (exports.lockContentScrollResizeObserver) {
+        exports.lockContentScrollResizeObserver.disconnect();
+    }
     if (!hasActiveScrollLocks()) {
         unlockBodyScroll();
     }
@@ -70,13 +72,17 @@ var unlockScrollElement = function (element) {
     }
 };
 var addStyleOverride = function (element, styleOverride) {
+    console.log('hello');
     var currentStyle = element.getAttribute("style");
     if (currentStyle === null) {
+        console.log('set style');
         return element.setAttribute("style", styleOverride);
     }
     if (currentStyle.indexOf(styleOverride) > -1) {
+        console.log('return');
         return;
     }
+    console.log('add style');
     return element.setAttribute("style", "".concat(currentStyle).concat(styleOverride));
 };
 var removeStyleOverride = function (element, styleOverride) {
