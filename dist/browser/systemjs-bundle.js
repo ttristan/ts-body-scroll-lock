@@ -1,16 +1,14 @@
 System.register("lib", [], function (exports_1, context_1) {
     "use strict";
-    var bodyDatasetName, elementDatasetName, bodyLockStyle, htmlLockStyle, bodyLockIOSStyle, htmlLockIOSStyle, scrollYContentLockStyle, removeAllScrollLocks, removeScrollLock, lockBodyScroll, getLockContentScrollResizeObserver, lockContentScrollElement, unlockBodyScroll, lockScrollElement, unlockScrollElement, addStyleOverride, removeStyleOverride, registerLockIdOnBody, unregisterLockIdOnBody, registerLockIdOnElement, getElementLockId, getAllLockedElements, hasActiveScrollLocks, unregisterLockIdOnElement, getBody, getHtml, getElement, preventTouchmoveHandler, getChildNodesHeight, isIOS;
+    var bodyDatasetName, elementDatasetName, lockStyle, lockIOSStyle, scrollYContentLockStyle, removeAllScrollLocks, removeScrollLock, lockBodyScroll, getLockContentScrollResizeObserver, lockContentScrollElement, unlockBodyScroll, lockScrollElement, unlockScrollElement, addStyleOverride, removeStyleOverride, registerLockIdOnBody, unregisterLockIdOnBody, registerLockIdOnElement, getElementLockId, getAllLockedElements, hasActiveScrollLocks, unregisterLockIdOnElement, getBody, getHtml, getElement, preventTouchmoveHandler, getChildNodesHeight, isIOS;
     var __moduleName = context_1 && context_1.id;
     return {
         setters: [],
         execute: function () {
             bodyDatasetName = "tsslock";
             elementDatasetName = "tsslockid";
-            bodyLockStyle = ";overscroll-behavior:none!important;-webkit-overflow-scrolling: auto!important;overflow:hidden!important;";
-            htmlLockStyle = ";overscroll-behavior:none!important;-webkit-overflow-scrolling: auto!important;overflow:hidden!important;";
-            bodyLockIOSStyle = ";touch-action:none!important;";
-            htmlLockIOSStyle = ";touch-action:none!important;";
+            lockStyle = ";overscroll-behavior:none!important;-webkit-overflow-scrolling: auto!important;overflow:hidden!important;";
+            lockIOSStyle = ";touch-action:none!important;overscroll-behavior:none!important;-webkit-overflow-scrolling: auto!important;overflow:hidden!important;";
             scrollYContentLockStyle = ";overflow-y:unset!important;";
             exports_1("removeAllScrollLocks", removeAllScrollLocks = (observer) => {
                 getAllLockedElements().forEach((element) => {
@@ -35,12 +33,13 @@ System.register("lib", [], function (exports_1, context_1) {
             exports_1("lockBodyScroll", lockBodyScroll = () => {
                 const html = getHtml();
                 const body = getBody();
-                addStyleOverride(html, htmlLockStyle);
-                addStyleOverride(body, bodyLockStyle);
                 if (isIOS) {
-                    addStyleOverride(html, htmlLockIOSStyle);
-                    addStyleOverride(body, bodyLockIOSStyle);
+                    addStyleOverride(html, lockIOSStyle);
+                    addStyleOverride(body, lockIOSStyle);
+                    return;
                 }
+                addStyleOverride(html, lockStyle);
+                addStyleOverride(body, lockStyle);
             });
             exports_1("getLockContentScrollResizeObserver", getLockContentScrollResizeObserver = () => {
                 if (!document) {
@@ -68,12 +67,13 @@ System.register("lib", [], function (exports_1, context_1) {
             unlockBodyScroll = () => {
                 const html = getHtml();
                 const body = getBody();
-                removeStyleOverride(html, htmlLockStyle);
-                removeStyleOverride(body, bodyLockStyle);
                 if (isIOS) {
-                    removeStyleOverride(html, htmlLockIOSStyle);
-                    removeStyleOverride(body, bodyLockIOSStyle);
+                    removeStyleOverride(html, lockIOSStyle);
+                    removeStyleOverride(body, lockIOSStyle);
+                    return;
                 }
+                removeStyleOverride(html, lockStyle);
+                removeStyleOverride(body, lockStyle);
             };
             lockScrollElement = (element) => {
                 addStyleOverride(element, scrollYContentLockStyle);

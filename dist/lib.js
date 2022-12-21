@@ -3,10 +3,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.registerLockIdOnElement = exports.registerLockIdOnBody = exports.lockContentScrollElement = exports.getLockContentScrollResizeObserver = exports.lockBodyScroll = exports.removeScrollLock = exports.removeAllScrollLocks = void 0;
 var bodyDatasetName = "tsslock";
 var elementDatasetName = "tsslockid";
-var bodyLockStyle = ";overscroll-behavior:none!important;-webkit-overflow-scrolling: auto!important;overflow:hidden!important;";
-var htmlLockStyle = ";overscroll-behavior:none!important;-webkit-overflow-scrolling: auto!important;overflow:hidden!important;";
-var bodyLockIOSStyle = ";touch-action:none!important;";
-var htmlLockIOSStyle = ";touch-action:none!important;";
+var lockStyle = ";overscroll-behavior:none!important;-webkit-overflow-scrolling: auto!important;overflow:hidden!important;";
+var lockIOSStyle = ";touch-action:none!important;overscroll-behavior:none!important;-webkit-overflow-scrolling: auto!important;overflow:hidden!important;";
 var scrollYContentLockStyle = ";overflow-y:unset!important;";
 var removeAllScrollLocks = function (observer) {
     getAllLockedElements().forEach(function (element) {
@@ -33,12 +31,13 @@ exports.removeScrollLock = removeScrollLock;
 var lockBodyScroll = function () {
     var html = getHtml();
     var body = getBody();
-    addStyleOverride(html, htmlLockStyle);
-    addStyleOverride(body, bodyLockStyle);
     if (isIOS) {
-        addStyleOverride(html, htmlLockIOSStyle);
-        addStyleOverride(body, bodyLockIOSStyle);
+        addStyleOverride(html, lockIOSStyle);
+        addStyleOverride(body, lockIOSStyle);
+        return;
     }
+    addStyleOverride(html, lockStyle);
+    addStyleOverride(body, lockStyle);
 };
 exports.lockBodyScroll = lockBodyScroll;
 var getLockContentScrollResizeObserver = function () {
@@ -69,12 +68,13 @@ exports.lockContentScrollElement = lockContentScrollElement;
 var unlockBodyScroll = function () {
     var html = getHtml();
     var body = getBody();
-    removeStyleOverride(html, htmlLockStyle);
-    removeStyleOverride(body, bodyLockStyle);
     if (isIOS) {
-        removeStyleOverride(html, htmlLockIOSStyle);
-        removeStyleOverride(body, bodyLockIOSStyle);
+        removeStyleOverride(html, lockIOSStyle);
+        removeStyleOverride(body, lockIOSStyle);
+        return;
     }
+    removeStyleOverride(html, lockStyle);
+    removeStyleOverride(body, lockStyle);
 };
 var lockScrollElement = function (element) {
     addStyleOverride(element, scrollYContentLockStyle);
