@@ -1,11 +1,12 @@
 <html lang="en-US">
   <head>
+    <title>Body Scroll Lock Example</title>
     <meta charset="utf-8" />
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1, viewport-fit=cover"
     />
-    <link rel="stylesheet" href="./assets/styles.css"></style>
+    <link rel="stylesheet" href="./assets/styles.css" />
     <script src="../node_modules/systemjs/dist/s.js"></script>
     <script src="../node_modules/systemjs/dist/extras/named-register.js"></script>
     <script src="./assets/modal.js"></script>
@@ -25,11 +26,21 @@
 
       const openModalSmall = () => {
         useSmallContentExample();
+
         const container = document.querySelector(".modal-content-container");
         const content = document.querySelector(".modal-content-short");
         openModal();
         useBodyScrollLock('small', container, content);
       };
+
+      const toggleExpandContent = () => {
+        if (largeContentVisible()) {
+          useSmallContentExample();
+        }
+        else {
+          useLargeContentExample();
+        }
+      }
     </script>
     <main>
       <section>
@@ -102,6 +113,8 @@
       </section>
       <div class="modal">
         <div class="modal-content-container">
+          <label for="input">Input opens keboard on mobile devices</label>
+          <input id="input" type="text" class="modal-input"/>
           <p class="modal-content modal-content-long visible">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas
             condimentum tempor tellus. Suspendisse quis dui orci. Donec et
@@ -165,12 +178,15 @@
             porttitor dolor. Donec vehicula mollis leo, sit amet euismod ipsum
             accumsan non. Curabitur pharetra, dui in tristique lobortis, lorem
           </p>
+          <button class="modal-button-expand" onclick="toggleExpandContent()">
+            Toggle Expand
+          </button>
           <button class="modal-button-sticky" onclick="closeModal()">
             close
           </button>
         </div>
       </div>
-      <div class="modal-backdrop" onclick="closeModal()" />
+      <div class="modal-backdrop" onclick="closeModal()"></div>
     </main>
   </body>
 </html>

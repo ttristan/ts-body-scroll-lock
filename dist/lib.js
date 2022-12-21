@@ -3,7 +3,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.registerLockIdOnElement = exports.registerLockIdOnBody = exports.lockContentScrollElement = exports.getLockContentScrollResizeObserver = exports.lockBodyScroll = exports.removeScrollLock = exports.removeAllScrollLocks = void 0;
 var bodyDatasetName = "tsslock";
 var elementDatasetName = "tsslockid";
-var bodyLockStyle = ";overscroll-behavior:none!important;overflow:hidden!important;";
+var bodyLockStyle = ";overscroll-behavior:none!important;-webkit-overflow-scrolling: auto!important;overflow:hidden!important;";
+var htmlLockStyle = ";overscroll-behavior:none!important;-webkit-overflow-scrolling: auto!important;overflow:hidden!important;";
+var bodyLockIOSStyle = ";touch-action:none!important;";
+var htmlLockIOSStyle = ";touch-action:none!important;";
 var scrollYContentLockStyle = ";overflow-y:unset!important;";
 var removeAllScrollLocks = function (observer) {
     getAllLockedElements().forEach(function (element) {
@@ -28,8 +31,14 @@ var removeScrollLock = function (element, observer) {
 };
 exports.removeScrollLock = removeScrollLock;
 var lockBodyScroll = function () {
+    var html = getHtml();
     var body = getBody();
+    addStyleOverride(html, htmlLockStyle);
     addStyleOverride(body, bodyLockStyle);
+    if (isIOS) {
+        addStyleOverride(html, htmlLockIOSStyle);
+        addStyleOverride(body, bodyLockIOSStyle);
+    }
 };
 exports.lockBodyScroll = lockBodyScroll;
 var getLockContentScrollResizeObserver = function () {
@@ -58,8 +67,14 @@ var lockContentScrollElement = function (containerElement, scrollContentElement)
 };
 exports.lockContentScrollElement = lockContentScrollElement;
 var unlockBodyScroll = function () {
+    var html = getHtml();
     var body = getBody();
+    removeStyleOverride(html, htmlLockStyle);
     removeStyleOverride(body, bodyLockStyle);
+    if (isIOS) {
+        removeStyleOverride(html, htmlLockIOSStyle);
+        removeStyleOverride(body, bodyLockIOSStyle);
+    }
 };
 var lockScrollElement = function (element) {
     addStyleOverride(element, scrollYContentLockStyle);
@@ -137,11 +152,17 @@ var unregisterLockIdOnElement = function (element) {
     return element.removeAttribute("data-".concat(elementDatasetName));
 };
 var getBody = function () {
-    var body = document.querySelector("body");
-    if (!body) {
-        throw "could no locate body in DOM";
+    return getElement('body');
+};
+var getHtml = function () {
+    return getElement('html');
+};
+var getElement = function (selector) {
+    var element = document.querySelector(selector);
+    if (!element) {
+        throw "could not locate ".concat(selector, " in DOM");
     }
-    return body;
+    return element;
 };
 var preventTouchmoveHandler = function (e) {
     try {

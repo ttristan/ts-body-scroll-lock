@@ -4,7 +4,14 @@
 const bodyDatasetName = "tsslock";
 const elementDatasetName = "tsslockid";
 const bodyLockStyle =
-  ";overscroll-behavior:none!important;overflow:hidden!important;";
+  ";overscroll-behavior:none!important;-webkit-overflow-scrolling: auto!important;overflow:hidden!important;";
+
+const htmlLockStyle =
+    ";overscroll-behavior:none!important;-webkit-overflow-scrolling: auto!important;overflow:hidden!important;";
+
+const bodyLockIOSStyle = ";touch-action:none!important;";
+
+const htmlLockIOSStyle = ";touch-action:none!important;";
 
 // used to fix iOS body scrolling when content is not large enough to be scrolled but has overflow-y: scroll
 const scrollYContentLockStyle = ";overflow-y:unset!important;";
@@ -40,8 +47,16 @@ export const removeScrollLock = (element: HTMLElement, observer: ResizeObserver 
 };
 
 export const lockBodyScroll = () => {
+  const html = getHtml();
   const body = getBody();
+
+  addStyleOverride(html, htmlLockStyle);
   addStyleOverride(body, bodyLockStyle);
+
+  if (isIOS) {
+    addStyleOverride(html, htmlLockIOSStyle);
+    addStyleOverride(body, bodyLockIOSStyle);
+  }
 };
 
 export const getLockContentScrollResizeObserver = (): ResizeObserver | null => {
@@ -81,9 +96,16 @@ export const lockContentScrollElement = (
 };
 
 const unlockBodyScroll = () => {
+  const html = getHtml();
   const body = getBody();
 
+  removeStyleOverride(html, htmlLockStyle);
   removeStyleOverride(body, bodyLockStyle);
+
+  if (isIOS) {
+    removeStyleOverride(html, htmlLockIOSStyle);
+    removeStyleOverride(body, bodyLockIOSStyle);
+  }
 };
 
 const lockScrollElement = (element: HTMLElement) => {
@@ -189,12 +211,20 @@ const unregisterLockIdOnElement = (element: HTMLElement) => {
  * DOM Helper
  */
 const getBody = () => {
-  const body = document.querySelector("body");
-  if (!body) {
-    throw "could no locate body in DOM";
-  }
-  return body;
+  return getElement('body') as HTMLBodyElement;
 };
+
+const getHtml = () => {
+  return getElement('html') as HTMLHtmlElement;
+}
+
+const getElement = (selector: string): HTMLElement => {
+  const element = document.querySelector(selector);
+  if (!element) {
+    throw `could not locate ${selector} in DOM`
+  }
+  return element as HTMLElement;
+}
 
 const preventTouchmoveHandler = (e: TouchEvent) => {
   try {
