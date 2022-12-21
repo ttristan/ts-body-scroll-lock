@@ -3,15 +3,9 @@
  */
 const bodyDatasetName = "tsslock";
 const elementDatasetName = "tsslockid";
-const bodyLockStyle =
-  ";overscroll-behavior:none!important;-webkit-overflow-scrolling: auto!important;overflow:hidden!important;";
 
-const htmlLockStyle =
-    ";overscroll-behavior:none!important;-webkit-overflow-scrolling: auto!important;overflow:hidden!important;";
-
-const bodyLockIOSStyle = ";touch-action:none!important;";
-
-const htmlLockIOSStyle = ";touch-action:none!important;";
+const lockStyle = ";overscroll-behavior:none!important;-webkit-overflow-scrolling: auto!important;overflow:hidden!important;";
+const lockIOSStyle = ";touch-action:none!important;overscroll-behavior:none!important;-webkit-overflow-scrolling: auto!important;overflow:hidden!important;";
 
 // used to fix iOS body scrolling when content is not large enough to be scrolled but has overflow-y: scroll
 const scrollYContentLockStyle = ";overflow-y:unset!important;";
@@ -50,13 +44,14 @@ export const lockBodyScroll = () => {
   const html = getHtml();
   const body = getBody();
 
-  addStyleOverride(html, htmlLockStyle);
-  addStyleOverride(body, bodyLockStyle);
-
   if (isIOS) {
-    addStyleOverride(html, htmlLockIOSStyle);
-    addStyleOverride(body, bodyLockIOSStyle);
+    addStyleOverride(html, lockIOSStyle);
+    addStyleOverride(body, lockIOSStyle);
+    return;
   }
+
+  addStyleOverride(html, lockStyle);
+  addStyleOverride(body, lockStyle);
 };
 
 export const getLockContentScrollResizeObserver = (): ResizeObserver | null => {
@@ -99,13 +94,14 @@ const unlockBodyScroll = () => {
   const html = getHtml();
   const body = getBody();
 
-  removeStyleOverride(html, htmlLockStyle);
-  removeStyleOverride(body, bodyLockStyle);
-
   if (isIOS) {
-    removeStyleOverride(html, htmlLockIOSStyle);
-    removeStyleOverride(body, bodyLockIOSStyle);
+    removeStyleOverride(html, lockIOSStyle);
+    removeStyleOverride(body, lockIOSStyle);
+    return;
   }
+
+  removeStyleOverride(html, lockStyle);
+  removeStyleOverride(body, lockStyle);
 };
 
 const lockScrollElement = (element: HTMLElement) => {
