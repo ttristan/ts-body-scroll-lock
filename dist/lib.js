@@ -4,7 +4,6 @@ exports.registerLockIdOnElement = exports.registerLockIdOnBody = exports.lockCon
 var bodyDatasetName = "tsslock";
 var elementDatasetName = "tsslockid";
 var lockStyle = ";overscroll-behavior:none!important;-webkit-overflow-scrolling: auto!important;overflow:hidden!important;";
-var lockIOSStyle = ";touch-action:none!important;overscroll-behavior:none!important;-webkit-overflow-scrolling: auto!important;overflow:hidden!important;";
 var scrollYContentLockStyle = ";overflow-y:unset!important;";
 var removeAllScrollLocks = function (observer) {
     getAllLockedElements().forEach(function (element) {
@@ -31,11 +30,6 @@ exports.removeScrollLock = removeScrollLock;
 var lockBodyScroll = function () {
     var html = getHtml();
     var body = getBody();
-    if (isIOS) {
-        addStyleOverride(html, lockIOSStyle);
-        addStyleOverride(body, lockIOSStyle);
-        return;
-    }
     addStyleOverride(html, lockStyle);
     addStyleOverride(body, lockStyle);
 };
@@ -68,11 +62,6 @@ exports.lockContentScrollElement = lockContentScrollElement;
 var unlockBodyScroll = function () {
     var html = getHtml();
     var body = getBody();
-    if (isIOS) {
-        removeStyleOverride(html, lockIOSStyle);
-        removeStyleOverride(body, lockIOSStyle);
-        return;
-    }
     removeStyleOverride(html, lockStyle);
     removeStyleOverride(body, lockStyle);
 };
