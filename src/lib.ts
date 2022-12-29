@@ -53,7 +53,7 @@ export const getLockContentScrollResizeObserver = (): ResizeObserver | null => {
   }
   return new ResizeObserver((entries) => {
     if (entries) {
-      const scrollContentElement = entries[0].target.parentElement;
+      const scrollContentElement = entries[0]?.target.parentElement;
       if (scrollContentElement && scrollContentElement.parentElement) {
         unlockScrollElement(scrollContentElement);
         lockContentScrollElement(scrollContentElement.parentElement, scrollContentElement)
@@ -194,19 +194,19 @@ const unregisterLockIdOnElement = (element: HTMLElement) => {
  * DOM Helper
  */
 const getBody = () => {
-  return getElement('body') as HTMLBodyElement;
+  return getElement('body');
 };
 
 const getHtml = () => {
-  return getElement('html') as HTMLHtmlElement;
+  return getElement('html');
 }
 
 const getElement = (selector: string): HTMLElement => {
   const element = document.querySelector(selector);
-  if (!element) {
+  if (!(element instanceof HTMLElement)) {
     throw `could not locate ${selector} in DOM`
   }
-  return element as HTMLElement;
+  return element;
 }
 
 const preventTouchmoveHandler = (e: TouchEvent) => {

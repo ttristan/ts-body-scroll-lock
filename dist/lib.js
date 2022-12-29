@@ -39,8 +39,9 @@ var getLockContentScrollResizeObserver = function () {
         return null;
     }
     return new ResizeObserver(function (entries) {
+        var _a;
         if (entries) {
-            var scrollContentElement = entries[0].target.parentElement;
+            var scrollContentElement = (_a = entries[0]) === null || _a === void 0 ? void 0 : _a.target.parentElement;
             if (scrollContentElement && scrollContentElement.parentElement) {
                 unlockScrollElement(scrollContentElement);
                 (0, exports.lockContentScrollElement)(scrollContentElement.parentElement, scrollContentElement);
@@ -148,7 +149,7 @@ var getHtml = function () {
 };
 var getElement = function (selector) {
     var element = document.querySelector(selector);
-    if (!element) {
+    if (!(element instanceof HTMLElement)) {
         throw "could not locate ".concat(selector, " in DOM");
     }
     return element;

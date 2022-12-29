@@ -40,8 +40,9 @@ System.register("lib", [], function (exports_1, context_1) {
                     return null;
                 }
                 return new ResizeObserver((entries) => {
+                    var _a;
                     if (entries) {
-                        const scrollContentElement = entries[0].target.parentElement;
+                        const scrollContentElement = (_a = entries[0]) === null || _a === void 0 ? void 0 : _a.target.parentElement;
                         if (scrollContentElement && scrollContentElement.parentElement) {
                             unlockScrollElement(scrollContentElement);
                             lockContentScrollElement(scrollContentElement.parentElement, scrollContentElement);
@@ -143,7 +144,7 @@ System.register("lib", [], function (exports_1, context_1) {
             };
             getElement = (selector) => {
                 const element = document.querySelector(selector);
-                if (!element) {
+                if (!(element instanceof HTMLElement)) {
                     throw `could not locate ${selector} in DOM`;
                 }
                 return element;
