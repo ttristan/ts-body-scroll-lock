@@ -69,6 +69,7 @@ section {
   padding: 1em;
   overflow-y: scroll;
   border-radius: 10px;
+  overscroll-behavior: contain;
   z-index: 1;
 }
 
@@ -89,14 +90,22 @@ section {
   flex-grow: 1;
 }
 
+button {
+  left: calc(50% - 5em);
+  right: calc(50% - 5em);
+  font-size: 1.2em;
+}
+
 .modal-button-sticky {
   display: block;
   position: sticky;
   bottom: 0;
   z-index: 1;
-  left: calc(50% - 5em);
-  right: calc(50% - 5em);
-  font-size: 1.2em;
+}
+
+.modal-input {
+  padding: 5px;
+  font-size: 16px;
 }
 
 .monospace {

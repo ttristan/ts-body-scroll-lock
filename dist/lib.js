@@ -1,34 +1,55 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.registerLockIdOnElement = exports.registerLockIdOnBody = exports.lockContentScrollElement = exports.lockBodyScroll = exports.removeScrollLock = exports.removeAllScrollLocks = void 0;
+exports.registerLockIdOnElement = exports.registerLockIdOnBody = exports.lockContentScrollElement = exports.getLockContentScrollResizeObserver = exports.lockBodyScroll = exports.removeScrollLock = exports.removeAllScrollLocks = void 0;
 var bodyDatasetName = "tsslock";
 var elementDatasetName = "tsslockid";
-var bodyLockStyle = ";overscroll-behavior:none!important;overflow:hidden!important;";
+var lockStyle = ";overscroll-behavior:none!important;-webkit-overflow-scrolling: auto!important;overflow:hidden!important;";
 var scrollYContentLockStyle = ";overflow-y:unset!important;";
-var removeAllScrollLocks = function () {
+var removeAllScrollLocks = function (observer) {
     getAllLockedElements().forEach(function (element) {
         if (!(element instanceof HTMLElement)) {
             console.warn("removing scroll lock for Elment", element, "is not possible, as it is not a HTMLElement");
             return;
         }
-        (0, exports.removeScrollLock)(element);
+        (0, exports.removeScrollLock)(element, observer);
     });
     unlockBodyScroll();
 };
 exports.removeAllScrollLocks = removeAllScrollLocks;
-var removeScrollLock = function (element) {
+var removeScrollLock = function (element, observer) {
     unregisterLockIdOnBody(element);
     unlockScrollElement(element);
+    if (observer) {
+        observer.disconnect();
+    }
     if (!hasActiveScrollLocks()) {
         unlockBodyScroll();
     }
 };
 exports.removeScrollLock = removeScrollLock;
 var lockBodyScroll = function () {
+    var html = getHtml();
     var body = getBody();
-    addStyleOverride(body, bodyLockStyle);
+    addStyleOverride(html, lockStyle);
+    addStyleOverride(body, lockStyle);
 };
 exports.lockBodyScroll = lockBodyScroll;
+var getLockContentScrollResizeObserver = function () {
+    if (!document) {
+        return null;
+    }
+    return new ResizeObserver(function (entries) {
+        var _a;
+        if (entries) {
+            var scrollContentElement = (_a = entries[0]) === null || _a === void 0 ? void 0 : _a.target.parentElement;
+            if (scrollContentElement && scrollContentElement.parentElement) {
+                unlockScrollElement(scrollContentElement);
+                (0, exports.lockContentScrollElement)(scrollContentElement.parentElement, scrollContentElement);
+            }
+        }
+    });
+};
+exports.getLockContentScrollResizeObserver = getLockContentScrollResizeObserver;
 var lockContentScrollElement = function (containerElement, scrollContentElement) {
     var containerHeight = containerElement.getBoundingClientRect().height;
     var contentHeight = scrollContentElement.getBoundingClientRect().height;
@@ -40,8 +61,10 @@ var lockContentScrollElement = function (containerElement, scrollContentElement)
 };
 exports.lockContentScrollElement = lockContentScrollElement;
 var unlockBodyScroll = function () {
+    var html = getHtml();
     var body = getBody();
-    removeStyleOverride(body, bodyLockStyle);
+    removeStyleOverride(html, lockStyle);
+    removeStyleOverride(body, lockStyle);
 };
 var lockScrollElement = function (element) {
     addStyleOverride(element, scrollYContentLockStyle);
@@ -119,11 +142,17 @@ var unregisterLockIdOnElement = function (element) {
     return element.removeAttribute("data-".concat(elementDatasetName));
 };
 var getBody = function () {
-    var body = document.querySelector("body");
-    if (!body) {
-        throw "could no locate body in DOM";
+    return getElement('body');
+};
+var getHtml = function () {
+    return getElement('html');
+};
+var getElement = function (selector) {
+    var element = document.querySelector(selector);
+    if (!(element instanceof HTMLElement)) {
+        throw "could not locate ".concat(selector, " in DOM");
     }
-    return body;
+    return element;
 };
 var preventTouchmoveHandler = function (e) {
     try {

@@ -27,3 +27,12 @@ const useSmallContentExample = () => {
   document.querySelector(".modal-content-long").classList.remove("visible");
   document.querySelector(".modal-content-short").classList.add("visible");
 };
+
+const useLargeContentExample = () => {
+  document.querySelector(".modal-content-long").classList.add("visible");
+  document.querySelector(".modal-content-short").classList.remove("visible");
+}
+
+largeContentVisible = () => {
+  return document.querySelector(".modal-content-long").classList.contains('visible');
+}

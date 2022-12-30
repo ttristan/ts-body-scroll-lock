@@ -1,34 +1,54 @@
 System.register("lib", [], function (exports_1, context_1) {
     "use strict";
-    var bodyDatasetName, elementDatasetName, bodyLockStyle, scrollYContentLockStyle, removeAllScrollLocks, removeScrollLock, lockBodyScroll, lockContentScrollElement, unlockBodyScroll, lockScrollElement, unlockScrollElement, addStyleOverride, removeStyleOverride, registerLockIdOnBody, unregisterLockIdOnBody, registerLockIdOnElement, getElementLockId, getAllLockedElements, hasActiveScrollLocks, unregisterLockIdOnElement, getBody, preventTouchmoveHandler, getChildNodesHeight, isIOS;
+    var bodyDatasetName, elementDatasetName, lockStyle, scrollYContentLockStyle, removeAllScrollLocks, removeScrollLock, lockBodyScroll, getLockContentScrollResizeObserver, lockContentScrollElement, unlockBodyScroll, lockScrollElement, unlockScrollElement, addStyleOverride, removeStyleOverride, registerLockIdOnBody, unregisterLockIdOnBody, registerLockIdOnElement, getElementLockId, getAllLockedElements, hasActiveScrollLocks, unregisterLockIdOnElement, getBody, getHtml, getElement, preventTouchmoveHandler, getChildNodesHeight, isIOS;
     var __moduleName = context_1 && context_1.id;
     return {
         setters: [],
         execute: function () {
             bodyDatasetName = "tsslock";
             elementDatasetName = "tsslockid";
-            bodyLockStyle = ";overscroll-behavior:none!important;overflow:hidden!important;";
+            lockStyle = ";overscroll-behavior:none!important;-webkit-overflow-scrolling: auto!important;overflow:hidden!important;";
             scrollYContentLockStyle = ";overflow-y:unset!important;";
-            exports_1("removeAllScrollLocks", removeAllScrollLocks = () => {
+            exports_1("removeAllScrollLocks", removeAllScrollLocks = (observer) => {
                 getAllLockedElements().forEach((element) => {
                     if (!(element instanceof HTMLElement)) {
                         console.warn("removing scroll lock for Elment", element, "is not possible, as it is not a HTMLElement");
                         return;
                     }
-                    removeScrollLock(element);
+                    removeScrollLock(element, observer);
                 });
                 unlockBodyScroll();
             });
-            exports_1("removeScrollLock", removeScrollLock = (element) => {
+            exports_1("removeScrollLock", removeScrollLock = (element, observer) => {
                 unregisterLockIdOnBody(element);
                 unlockScrollElement(element);
+                if (observer) {
+                    observer.disconnect();
+                }
                 if (!hasActiveScrollLocks()) {
                     unlockBodyScroll();
                 }
             });
             exports_1("lockBodyScroll", lockBodyScroll = () => {
+                const html = getHtml();
                 const body = getBody();
-                addStyleOverride(body, bodyLockStyle);
+                addStyleOverride(html, lockStyle);
+                addStyleOverride(body, lockStyle);
+            });
+            exports_1("getLockContentScrollResizeObserver", getLockContentScrollResizeObserver = () => {
+                if (!document) {
+                    return null;
+                }
+                return new ResizeObserver((entries) => {
+                    var _a;
+                    if (entries) {
+                        const scrollContentElement = (_a = entries[0]) === null || _a === void 0 ? void 0 : _a.target.parentElement;
+                        if (scrollContentElement && scrollContentElement.parentElement) {
+                            unlockScrollElement(scrollContentElement);
+                            lockContentScrollElement(scrollContentElement.parentElement, scrollContentElement);
+                        }
+                    }
+                });
             });
             exports_1("lockContentScrollElement", lockContentScrollElement = (containerElement, scrollContentElement) => {
                 const containerHeight = containerElement.getBoundingClientRect().height;
@@ -40,8 +60,10 @@ System.register("lib", [], function (exports_1, context_1) {
                 }
             });
             unlockBodyScroll = () => {
+                const html = getHtml();
                 const body = getBody();
-                removeStyleOverride(body, bodyLockStyle);
+                removeStyleOverride(html, lockStyle);
+                removeStyleOverride(body, lockStyle);
             };
             lockScrollElement = (element) => {
                 addStyleOverride(element, scrollYContentLockStyle);
@@ -115,11 +137,17 @@ System.register("lib", [], function (exports_1, context_1) {
                 return element.removeAttribute(`data-${elementDatasetName}`);
             };
             getBody = () => {
-                const body = document.querySelector("body");
-                if (!body) {
-                    throw "could no locate body in DOM";
+                return getElement('body');
+            };
+            getHtml = () => {
+                return getElement('html');
+            };
+            getElement = (selector) => {
+                const element = document.querySelector(selector);
+                if (!(element instanceof HTMLElement)) {
+                    throw `could not locate ${selector} in DOM`;
                 }
-                return body;
+                return element;
             };
             preventTouchmoveHandler = (e) => {
                 try {
@@ -156,12 +184,16 @@ System.register("index", ["lib"], function (exports_2, context_2) {
         lib_1.registerLockIdOnBody(id);
         lib_1.registerLockIdOnElement(containerElement, id);
         lib_1.lockBodyScroll();
-        if (scrollContentElement) {
+        const observer = lib_1.getLockContentScrollResizeObserver();
+        if (scrollContentElement && observer) {
             lib_1.lockContentScrollElement(containerElement, scrollContentElement);
+            Array.from(scrollContentElement.children).forEach((child) => {
+                observer.observe(child);
+            });
         }
         return {
-            removeScrollLock: () => lib_1.removeScrollLock(containerElement),
-            removeAllScrollLocks: lib_1.removeAllScrollLocks,
+            removeScrollLock: () => lib_1.removeScrollLock(containerElement, observer),
+            removeAllScrollLocks: () => lib_1.removeAllScrollLocks(observer),
         };
     }
     exports_2("default", useBodyScrollLock);
