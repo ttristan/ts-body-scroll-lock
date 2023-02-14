@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.registerLockIdOnElement = exports.registerLockIdOnBody = exports.lockContentScrollElement = exports.getLockContentScrollResizeObserver = exports.lockBodyScroll = exports.removeScrollLock = exports.removeAllScrollLocks = void 0;
 var bodyDatasetName = "tsslock";
 var elementDatasetName = "tsslockid";
+var styleBackupDatasetName = "tsslockstyle";
 var lockStyle = ";overscroll-behavior:none!important;-webkit-overflow-scrolling: auto!important;overflow:hidden!important;";
 var scrollYContentLockStyle = ";overflow-y:unset!important;";
 var removeAllScrollLocks = function (observer) {
@@ -63,8 +64,8 @@ exports.lockContentScrollElement = lockContentScrollElement;
 var unlockBodyScroll = function () {
     var html = getHtml();
     var body = getBody();
-    removeStyleOverride(html, lockStyle);
-    removeStyleOverride(body, lockStyle);
+    removeStyleOverride(html);
+    removeStyleOverride(body);
 };
 var lockScrollElement = function (element) {
     addStyleOverride(element, scrollYContentLockStyle);
@@ -73,32 +74,38 @@ var lockScrollElement = function (element) {
     }
 };
 var unlockScrollElement = function (element) {
-    removeStyleOverride(element, scrollYContentLockStyle);
+    removeStyleOverride(element);
     unregisterLockIdOnElement(element);
     if (isIOS) {
         element.removeEventListener("touchmove", preventTouchmoveHandler);
     }
 };
 var addStyleOverride = function (element, styleOverride) {
+    if (element.dataset[styleBackupDatasetName]) {
+        return;
+    }
+    element.dataset[styleBackupDatasetName] = '';
     var currentStyle = element.getAttribute("style");
     if (currentStyle === null) {
         return element.setAttribute("style", styleOverride);
     }
-    if (currentStyle.indexOf(styleOverride) > -1) {
-        return;
+    if (currentStyle.length > 0) {
+        element.dataset[styleBackupDatasetName] = currentStyle;
     }
     return element.setAttribute("style", "".concat(currentStyle).concat(styleOverride));
 };
-var removeStyleOverride = function (element, styleOverride) {
+var removeStyleOverride = function (element) {
     var currentStyle = element.getAttribute("style");
     if (currentStyle == null) {
         return;
     }
-    var newStyle = currentStyle.replace(new RegExp(styleOverride + "$"), "");
-    if (newStyle === "") {
+    var storedStyle = element.dataset[styleBackupDatasetName];
+    console.log("storedStyle", storedStyle);
+    element.removeAttribute("data-".concat(styleBackupDatasetName));
+    if (!storedStyle) {
         return element.removeAttribute("style");
     }
-    return element.setAttribute("style", newStyle);
+    return element.setAttribute("style", storedStyle);
 };
 var registerLockIdOnBody = function (id) {
     var body = getBody();

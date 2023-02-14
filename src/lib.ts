@@ -3,6 +3,7 @@
  */
 const bodyDatasetName = "tsslock";
 const elementDatasetName = "tsslockid";
+const styleBackupDatasetName = "tsslockstyle";
 
 const lockStyle = ";overscroll-behavior:none!important;-webkit-overflow-scrolling: auto!important;overflow:hidden!important;";
 
@@ -87,8 +88,8 @@ const unlockBodyScroll = () => {
   const html = getHtml();
   const body = getBody();
 
-  removeStyleOverride(html, lockStyle);
-  removeStyleOverride(body, lockStyle);
+  removeStyleOverride(html);
+  removeStyleOverride(body);
 };
 
 const lockScrollElement = (element: HTMLElement) => {
@@ -100,7 +101,7 @@ const lockScrollElement = (element: HTMLElement) => {
 };
 
 const unlockScrollElement = (element: HTMLElement) => {
-  removeStyleOverride(element, scrollYContentLockStyle);
+  removeStyleOverride(element);
   unregisterLockIdOnElement(element);
 
   if (isIOS) {
@@ -112,27 +113,37 @@ const unlockScrollElement = (element: HTMLElement) => {
  * Inline Style handler
  */
 const addStyleOverride = (element: HTMLElement, styleOverride: string) => {
+  if (element.dataset[styleBackupDatasetName]) {
+    // style is already applied
+    return;
+  }
+  // set some style as default
+  element.dataset[styleBackupDatasetName] = '';
+
   const currentStyle = element.getAttribute("style");
   if (currentStyle === null) {
     return element.setAttribute("style", styleOverride);
   }
-  if (currentStyle.indexOf(styleOverride) > -1) {
-    return;
+  if (currentStyle.length > 0) {
+    // store current inline style
+    element.dataset[styleBackupDatasetName] = currentStyle;
   }
   return element.setAttribute("style", `${currentStyle}${styleOverride}`);
 };
 
-const removeStyleOverride = (element: HTMLElement, styleOverride: string) => {
+const removeStyleOverride = (element: HTMLElement) => {
   const currentStyle = element.getAttribute("style");
   if (currentStyle == null) {
     return;
   }
-  // this is more complicated than it could be but it makes sure we do not override user-defined inline styles
-  const newStyle = currentStyle.replace(new RegExp(styleOverride + "$"), "");
-  if (newStyle === "") {
+  const storedStyle = element.dataset[styleBackupDatasetName];
+  console.log("storedStyle", storedStyle);
+  element.removeAttribute("data-".concat(styleBackupDatasetName))
+
+  if (!storedStyle) {
     return element.removeAttribute("style");
   }
-  return element.setAttribute("style", newStyle);
+  return element.setAttribute("style", storedStyle);
 };
 
 /**

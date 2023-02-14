@@ -1,12 +1,13 @@
 System.register("lib", [], function (exports_1, context_1) {
     "use strict";
-    var bodyDatasetName, elementDatasetName, lockStyle, scrollYContentLockStyle, removeAllScrollLocks, removeScrollLock, lockBodyScroll, getLockContentScrollResizeObserver, lockContentScrollElement, unlockBodyScroll, lockScrollElement, unlockScrollElement, addStyleOverride, removeStyleOverride, registerLockIdOnBody, unregisterLockIdOnBody, registerLockIdOnElement, getElementLockId, getAllLockedElements, hasActiveScrollLocks, unregisterLockIdOnElement, getBody, getHtml, getElement, preventTouchmoveHandler, getChildNodesHeight, isIOS;
+    var bodyDatasetName, elementDatasetName, styleBackupDatasetName, lockStyle, scrollYContentLockStyle, removeAllScrollLocks, removeScrollLock, lockBodyScroll, getLockContentScrollResizeObserver, lockContentScrollElement, unlockBodyScroll, lockScrollElement, unlockScrollElement, addStyleOverride, removeStyleOverride, registerLockIdOnBody, unregisterLockIdOnBody, registerLockIdOnElement, getElementLockId, getAllLockedElements, hasActiveScrollLocks, unregisterLockIdOnElement, getBody, getHtml, getElement, preventTouchmoveHandler, getChildNodesHeight, isIOS;
     var __moduleName = context_1 && context_1.id;
     return {
         setters: [],
         execute: function () {
             bodyDatasetName = "tsslock";
             elementDatasetName = "tsslockid";
+            styleBackupDatasetName = "tsslockstyle";
             lockStyle = ";overscroll-behavior:none!important;-webkit-overflow-scrolling: auto!important;overflow:hidden!important;";
             scrollYContentLockStyle = ";overflow-y:unset!important;";
             exports_1("removeAllScrollLocks", removeAllScrollLocks = (observer) => {
@@ -62,8 +63,8 @@ System.register("lib", [], function (exports_1, context_1) {
             unlockBodyScroll = () => {
                 const html = getHtml();
                 const body = getBody();
-                removeStyleOverride(html, lockStyle);
-                removeStyleOverride(body, lockStyle);
+                removeStyleOverride(html);
+                removeStyleOverride(body);
             };
             lockScrollElement = (element) => {
                 addStyleOverride(element, scrollYContentLockStyle);
@@ -72,32 +73,38 @@ System.register("lib", [], function (exports_1, context_1) {
                 }
             };
             unlockScrollElement = (element) => {
-                removeStyleOverride(element, scrollYContentLockStyle);
+                removeStyleOverride(element);
                 unregisterLockIdOnElement(element);
                 if (isIOS) {
                     element.removeEventListener("touchmove", preventTouchmoveHandler);
                 }
             };
             addStyleOverride = (element, styleOverride) => {
+                if (element.dataset[styleBackupDatasetName]) {
+                    return;
+                }
+                element.dataset[styleBackupDatasetName] = '';
                 const currentStyle = element.getAttribute("style");
                 if (currentStyle === null) {
                     return element.setAttribute("style", styleOverride);
                 }
-                if (currentStyle.indexOf(styleOverride) > -1) {
-                    return;
+                if (currentStyle.length > 0) {
+                    element.dataset[styleBackupDatasetName] = currentStyle;
                 }
                 return element.setAttribute("style", `${currentStyle}${styleOverride}`);
             };
-            removeStyleOverride = (element, styleOverride) => {
+            removeStyleOverride = (element) => {
                 const currentStyle = element.getAttribute("style");
                 if (currentStyle == null) {
                     return;
                 }
-                const newStyle = currentStyle.replace(new RegExp(styleOverride + "$"), "");
-                if (newStyle === "") {
+                const storedStyle = element.dataset[styleBackupDatasetName];
+                console.log("storedStyle", storedStyle);
+                element.removeAttribute("data-".concat(styleBackupDatasetName));
+                if (!storedStyle) {
                     return element.removeAttribute("style");
                 }
-                return element.setAttribute("style", newStyle);
+                return element.setAttribute("style", storedStyle);
             };
             exports_1("registerLockIdOnBody", registerLockIdOnBody = (id) => {
                 const body = getBody();
