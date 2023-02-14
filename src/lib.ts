@@ -137,7 +137,6 @@ const removeStyleOverride = (element: HTMLElement) => {
     return;
   }
   const storedStyle = element.dataset[styleBackupDatasetName];
-  console.log("storedStyle", storedStyle);
   element.removeAttribute("data-".concat(styleBackupDatasetName))
 
   if (!storedStyle) {

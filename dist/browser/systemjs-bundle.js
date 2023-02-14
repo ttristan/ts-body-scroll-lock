@@ -99,7 +99,6 @@ System.register("lib", [], function (exports_1, context_1) {
                     return;
                 }
                 const storedStyle = element.dataset[styleBackupDatasetName];
-                console.log("storedStyle", storedStyle);
                 element.removeAttribute("data-".concat(styleBackupDatasetName));
                 if (!storedStyle) {
                     return element.removeAttribute("style");
