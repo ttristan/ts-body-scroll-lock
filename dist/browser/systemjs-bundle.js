@@ -80,7 +80,7 @@ System.register("lib", [], function (exports_1, context_1) {
                 }
             };
             addStyleOverride = (element, styleOverride) => {
-                if (element.dataset[styleBackupDatasetName]) {
+                if (typeof element.dataset[styleBackupDatasetName] === 'string') {
                     return;
                 }
                 element.dataset[styleBackupDatasetName] = '';

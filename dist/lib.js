@@ -81,7 +81,7 @@ var unlockScrollElement = function (element) {
     }
 };
 var addStyleOverride = function (element, styleOverride) {
-    if (element.dataset[styleBackupDatasetName]) {
+    if (typeof element.dataset[styleBackupDatasetName] === 'string') {
         return;
     }
     element.dataset[styleBackupDatasetName] = '';

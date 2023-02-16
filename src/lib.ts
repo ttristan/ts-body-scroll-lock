@@ -113,7 +113,7 @@ const unlockScrollElement = (element: HTMLElement) => {
  * Inline Style handler
  */
 const addStyleOverride = (element: HTMLElement, styleOverride: string) => {
-  if (element.dataset[styleBackupDatasetName]) {
+  if (typeof element.dataset[styleBackupDatasetName] === 'string') {
     // style is already applied
     return;
   }
