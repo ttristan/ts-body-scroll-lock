@@ -1,3 +1,4 @@
+export declare const getVersion: () => string;
 export declare const removeAllScrollLocks: (observer: ResizeObserver | null) => void;
 export declare const removeScrollLock: (element: HTMLElement, observer: ResizeObserver | null) => void;
 export declare const lockBodyScroll: () => void;

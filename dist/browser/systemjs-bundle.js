@@ -1,6 +1,6 @@
 System.register("lib", [], function (exports_1, context_1) {
     "use strict";
-    var bodyDatasetName, elementDatasetName, styleBackupDatasetName, lockStyle, scrollYContentLockStyle, removeAllScrollLocks, removeScrollLock, lockBodyScroll, getLockContentScrollResizeObserver, lockContentScrollElement, unlockBodyScroll, lockScrollElement, unlockScrollElement, addStyleOverride, removeStyleOverride, registerLockIdOnBody, unregisterLockIdOnBody, registerLockIdOnElement, getElementLockId, getAllLockedElements, hasActiveScrollLocks, unregisterLockIdOnElement, getBody, getHtml, getElement, preventTouchmoveHandler, getChildNodesHeight, isIOS;
+    var bodyDatasetName, elementDatasetName, styleBackupDatasetName, version, lockStyle, scrollYContentLockStyle, getVersion, removeAllScrollLocks, removeScrollLock, lockBodyScroll, getLockContentScrollResizeObserver, lockContentScrollElement, unlockBodyScroll, lockScrollElement, unlockScrollElement, addStyleOverride, removeStyleOverride, registerLockIdOnBody, unregisterLockIdOnBody, registerLockIdOnElement, getElementLockId, getAllLockedElements, hasActiveScrollLocks, unregisterLockIdOnElement, getBody, getHtml, getElement, preventTouchmoveHandler, getChildNodesHeight, isIOS;
     var __moduleName = context_1 && context_1.id;
     return {
         setters: [],
@@ -8,8 +8,10 @@ System.register("lib", [], function (exports_1, context_1) {
             bodyDatasetName = "tsslock";
             elementDatasetName = "tsslockid";
             styleBackupDatasetName = "tsslockstyle";
+            version = '0.11.3';
             lockStyle = ";overscroll-behavior:none!important;-webkit-overflow-scrolling: auto!important;overflow:hidden!important;";
             scrollYContentLockStyle = ";overflow-y:unset!important;";
+            exports_1("getVersion", getVersion = () => version);
             exports_1("removeAllScrollLocks", removeAllScrollLocks = (observer) => {
                 getAllLockedElements().forEach((element) => {
                     if (!(element instanceof HTMLElement)) {

@@ -1,4 +1,5 @@
 declare module "lib" {
+    export const getVersion: () => string;
     export const removeAllScrollLocks: (observer: ResizeObserver | null) => void;
     export const removeScrollLock: (element: HTMLElement, observer: ResizeObserver | null) => void;
     export const lockBodyScroll: () => void;

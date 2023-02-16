@@ -1,11 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.registerLockIdOnElement = exports.registerLockIdOnBody = exports.lockContentScrollElement = exports.getLockContentScrollResizeObserver = exports.lockBodyScroll = exports.removeScrollLock = exports.removeAllScrollLocks = void 0;
+exports.registerLockIdOnElement = exports.registerLockIdOnBody = exports.lockContentScrollElement = exports.getLockContentScrollResizeObserver = exports.lockBodyScroll = exports.removeScrollLock = exports.removeAllScrollLocks = exports.getVersion = void 0;
 var bodyDatasetName = "tsslock";
 var elementDatasetName = "tsslockid";
 var styleBackupDatasetName = "tsslockstyle";
+var version = '0.11.3';
 var lockStyle = ";overscroll-behavior:none!important;-webkit-overflow-scrolling: auto!important;overflow:hidden!important;";
 var scrollYContentLockStyle = ";overflow-y:unset!important;";
+var getVersion = function () { return version; };
+exports.getVersion = getVersion;
 var removeAllScrollLocks = function (observer) {
     getAllLockedElements().forEach(function (element) {
         if (!(element instanceof HTMLElement)) {
