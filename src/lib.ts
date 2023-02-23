@@ -6,7 +6,8 @@ const elementDatasetName = "tsslockid";
 const styleBackupDatasetName = "tsslockstyle";
 const version = '0.11.3';
 
-const lockStyle = ";overscroll-behavior:none!important;-webkit-overflow-scrolling: auto!important;";
+const lockStyleHTML = ";overscroll-behavior:none!important;-webkit-overflow-scrolling: auto!important;overflow:hidden!important;";
+const lockStyleBody = ";overscroll-behavior:none!important;-webkit-overflow-scrolling: auto!important;";
 
 // used to fix iOS body scrolling when content is not large enough to be scrolled but has overflow-y: scroll
 const scrollYContentLockStyle = ";overflow-y:unset!important;";
@@ -47,8 +48,8 @@ export const lockBodyScroll = () => {
   const html = getHtml();
   const body = getBody();
 
-  addStyleOverride(html, lockStyle);
-  addStyleOverride(body, lockStyle);
+  addStyleOverride(html, lockStyleHTML);
+  addStyleOverride(body, lockStyleBody);
 };
 
 export const getLockContentScrollResizeObserver = (): ResizeObserver | null => {
