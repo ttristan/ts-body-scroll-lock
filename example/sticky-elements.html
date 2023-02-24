@@ -1,0 +1,165 @@
+<html lang="en-US">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <link rel="stylesheet" href="./assets/styles.css">
+    </style>
+    <script src="../node_modules/systemjs/dist/s.js"></script>
+    <script src="../node_modules/systemjs/dist/extras/named-register.js"></script>
+    <script src="./assets/modal.js"></script>
+    <script src="./assets/scroll-lock.js"></script>
+</head>
+
+<body>
+    <script>
+        const openModalDefault = () => {
+            openModal();
+            lockBodyScroll();
+        }
+
+    </script>
+    <main>
+        <section>
+            <h2>Modal</h2>
+            <p>
+                Sticky elements still stay visible once you open the modal. </p>
+            <button onclick="openModalDefault()">
+                Open Modal
+            </button>
+        </section>
+        <section>
+            <h2>Content to make the body scrollable</h2>
+            <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas
+                condimentum tempor tellus. Suspendisse quis dui orci. Donec et
+                porttitor dolor. Donec vehicula mollis leo, sit amet euismod ipsum
+                accumsan non. Curabitur pharetra, dui in tristique lobortis, lorem
+                libero congue mi, vel pharetra ex mi vel ante. Curabitur a magna id
+                augue mattis tempus. Curabitur pellentesque mattis tincidunt. Fusce
+                ornare accumsan est eu eleifend. Mauris eu dolor ac dui vestibulum
+                condimentum eget id nisl. Etiam ut iaculis nibh. Nulla imperdiet lorem
+                mattis risus eleifend porttitor ac eu tellus. Nam tincidunt, magna ac
+                tincidunt mollis, enim est accumsan libero, vitae malesuada tortor
+                tellus in sem. Proin tincidunt pharetra consectetur. Orci varius
+                natoque penatibus et magnis dis parturient montes, nascetur ridiculus
+                mus. Sed sit amet turpis odio. In pulvinar odio ac nisi placerat
+                sodales. Aliquam erat volutpat. Vestibulum mattis efficitur urna
+                pellentesque volutpat. Ut a est eget turpis malesuada pretium.
+                Suspendisse potenti. Nam feugiat arcu eget est egestas rutrum. Integer
+                ligula diam, tempus et feugiat ac, posuere vitae quam. Donec vel
+                libero neque. Integer ac urna egestas, viverra ipsum vitae, dignissim
+                justo. Nunc interdum leo eu urna ornare mollis. Vivamus ac risus
+                sodales, scelerisque arcu ac, laoreet mauris. Vestibulum varius at sem
+                vitae facilisis. Sed sit amet scelerisque arcu, quis consequat ligula.
+                Pellentesque bibendum sapien a lobortis consectetur. Nullam porta
+                nulla vel leo aliquam efficitur. Orci varius natoque penatibus et
+                magnis dis parturient montes, nascetur ridiculus mus. Ut sed nisl sed
+                eros luctus mattis. Pellentesque interdum sagittis metus, nec
+                tristique nisl finibus sed. Nulla facilisi. Etiam ornare tincidunt
+                libero. Quisque sodales suscipit dolor, eget elementum augue tincidunt
+                non. Interdum et malesuada fames ac ante ipsum primis in faucibus. Sed
+                condimentum, nunc at congue vulputate, mi turpis mattis libero, eget
+                pretium dui nibh at enim. Cras ac mauris eget lectus fermentum
+                tristique. Pellentesque massa augue, consequat ut dictum vitae,
+                efficitur tempus lorem. In faucibus neque vel risus lacinia, vel
+                tempus massa feugiat. Pellentesque vitae varius lorem. Nam eu quam a
+                diam molestie volutpat. Fusce maximus dui sit amet libero ullamcorper,
+                blandit sodales sem tincidunt. Aenean consectetur, metus dictum
+                maximus gravida, tortor lectus fringilla magna, eget pretium erat dui
+                eget tortor. Donec in nisl id eros eleifend viverra ac sit amet felis.
+                Mauris sodales pulvinar mi, at ullamcorper magna commodo at. Praesent
+                feugiat ex arcu, nec venenatis sapien gravida in. Praesent ultrices
+                enim sem, id convallis nunc tincidunt ut. Proin et lorem eu turpis
+                vehicula blandit nec nec quam. In sit amet lectus maximus, tristique
+                lorem non, vestibulum odio. Etiam ornare lectus ac orci blandit, id
+                tempor orci vulputate. Donec eget augue nibh. Mauris ut vestibulum
+                metus, quis hendrerit mi. Cras vestibulum dolor non lorem euismod
+                commodo. Donec volutpat metus eu rutrum sodales. Praesent sit amet
+                iaculis nulla. In a ex dui. Maecenas congue porttitor tellus, vel
+                accumsan tellus cursus venenatis. Proin luctus consequat turpis, a
+                pharetra lectus tincidunt in. In eget dolor sit amet quam dignissim
+                ultrices. Maecenas elementum, leo sed finibus interdum, leo felis
+                sagittis nunc, ac aliquam turpis lacus quis justo. Donec tincidunt
+                porta porta. Morbi quis ante in tellus auctor suscipit ut nec est. Ut
+                placerat commodo ipsum, ac sollicitudin tellus pretium id. Duis
+                pretium massa id placerat dignissim. Praesent at sem in nisl egestas
+                mattis. Ut vel iaculis ligula.
+            </p>
+        </section>
+        <div class="modal">
+            <div class="modal-content-container">
+                <p class="modal-content modal-content-long visible">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas
+                    condimentum tempor tellus. Suspendisse quis dui orci. Donec et
+                    porttitor dolor. Donec vehicula mollis leo, sit amet euismod ipsum
+                    accumsan non. Curabitur pharetra, dui in tristique lobortis, lorem
+                    libero congue mi, vel pharetra ex mi vel ante. Curabitur a magna id
+                    augue mattis tempus. Curabitur pellentesque mattis tincidunt. Fusce
+                    ornare accumsan est eu eleifend. Mauris eu dolor ac dui vestibulum
+                    condimentum eget id nisl. Etiam ut iaculis nibh. Nulla imperdiet
+                    lorem mattis risus eleifend porttitor ac eu tellus. Nam tincidunt,
+                    magna ac tincidunt mollis, enim est accumsan libero, vitae malesuada
+                    tortor tellus in sem. Proin tincidunt pharetra consectetur. Orci
+                    varius natoque penatibus et magnis dis parturient montes, nascetur
+                    ridiculus mus. Sed sit amet turpis odio. In pulvinar odio ac nisi
+                    placerat sodales. Aliquam erat volutpat. Vestibulum mattis efficitur
+                    urna pellentesque volutpat. Ut a est eget turpis malesuada pretium.
+                    Suspendisse potenti. Nam feugiat arcu eget est egestas rutrum.
+                    Integer ligula diam, tempus et feugiat ac, posuere vitae quam. Donec
+                    vel libero neque. Integer ac urna egestas, viverra ipsum vitae,
+                    dignissim justo. Nunc interdum leo eu urna ornare mollis. Vivamus ac
+                    risus sodales, scelerisque arcu ac, laoreet mauris. Vestibulum
+                    varius at sem vitae facilisis. Sed sit amet scelerisque arcu, quis
+                    consequat ligula. Pellentesque bibendum sapien a lobortis
+                    consectetur. Nullam porta nulla vel leo aliquam efficitur. Orci
+                    varius natoque penatibus et magnis dis parturient montes, nascetur
+                    ridiculus mus. Ut sed nisl sed eros luctus mattis. Pellentesque
+                    interdum sagittis metus, nec tristique nisl finibus sed. Nulla
+                    facilisi. Etiam ornare tincidunt libero. Quisque sodales suscipit
+                    dolor, eget elementum augue tincidunt non. Interdum et malesuada
+                    fames ac ante ipsum primis in faucibus. Sed condimentum, nunc at
+                    congue vulputate, mi turpis mattis libero, eget pretium dui nibh at
+                    enim. Cras ac mauris eget lectus fermentum tristique. Pellentesque
+                    massa augue, consequat ut dictum vitae, efficitur tempus lorem. In
+                    faucibus neque vel risus lacinia, vel tempus massa feugiat.
+                    Pellentesque vitae varius lorem. Nam eu quam a diam molestie
+                    volutpat. Fusce maximus dui sit amet libero ullamcorper, blandit
+                    sodales sem tincidunt. Aenean consectetur, metus dictum maximus
+                    gravida, tortor lectus fringilla magna, eget pretium erat dui eget
+                    tortor. Donec in nisl id eros eleifend viverra ac sit amet felis.
+                    Mauris sodales pulvinar mi, at ullamcorper magna commodo at.
+                    Praesent feugiat ex arcu, nec venenatis sapien gravida in. Praesent
+                    ultrices enim sem, id convallis nunc tincidunt ut. Proin et lorem eu
+                    turpis vehicula blandit nec nec quam. In sit amet lectus maximus,
+                    tristique lorem non, vestibulum odio. Etiam ornare lectus ac orci
+                    blandit, id tempor orci vulputate. Donec eget augue nibh. Mauris ut
+                    vestibulum metus, quis hendrerit mi. Cras vestibulum dolor non lorem
+                    euismod commodo. Donec volutpat metus eu rutrum sodales. Praesent
+                    sit amet iaculis nulla. In a ex dui. Maecenas congue porttitor
+                    tellus, vel accumsan tellus cursus venenatis. Proin luctus consequat
+                    turpis, a pharetra lectus tincidunt in. In eget dolor sit amet quam
+                    dignissim ultrices. Maecenas elementum, leo sed finibus interdum,
+                    leo felis sagittis nunc, ac aliquam turpis lacus quis justo. Donec
+                    tincidunt porta porta. Morbi quis ante in tellus auctor suscipit ut
+                    nec est. Ut placerat commodo ipsum, ac sollicitudin tellus pretium
+                    id. Duis pretium massa id placerat dignissim. Praesent at sem in
+                    nisl egestas mattis. Ut vel iaculis ligula.
+                </p>
+                <p class="modal-content modal-content-short">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas
+                    condimentum tempor tellus. Suspendisse quis dui orci. Donec et
+                    porttitor dolor. Donec vehicula mollis leo, sit amet euismod ipsum
+                    accumsan non. Curabitur pharetra, dui in tristique lobortis, lorem
+                </p>
+                <button class="modal-button-sticky" onclick="closeModal()">
+                    close
+                </button>
+            </div>
+        </div>
+        <div class="modal-backdrop" onclick="closeModal()" />
+    </main>
+    <button class="sticky-button">Sticky Button</button>
+</body>
+
+</html>

@@ -46,8 +46,13 @@ section {
   display: unset !important;
 }
 
+.modal {
+  z-index: 2;
+}
+
 .modal-backdrop {
-  position: fixed;
+  z-index: 1;
+   position: fixed;
   top: 0;
   right: 0;
   bottom: 0;
@@ -110,4 +115,12 @@ button {
 
 .monospace {
   font-family: monospace;
+}
+
+ 
+.sticky-button {
+  margin-top: 30px;
+  position: -webkit-sticky;
+    position: sticky;
+    top: 0; 
 }
