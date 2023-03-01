@@ -5,7 +5,8 @@ var bodyDatasetName = "tsslock";
 var elementDatasetName = "tsslockid";
 var styleBackupDatasetName = "tsslockstyle";
 var version = '0.11.3';
-var lockStyle = ";overscroll-behavior:none!important;-webkit-overflow-scrolling: auto!important;overflow:hidden!important;";
+var lockStyleBody = ";overscroll-behavior:none!important;-webkit-overflow-scrolling: auto!important;";
+var lockStyleHTML = lockStyleBody + "overflow:hidden!important;";
 var scrollYContentLockStyle = ";overflow-y:unset!important;";
 var getVersion = function () { return version; };
 exports.getVersion = getVersion;
@@ -34,8 +35,8 @@ exports.removeScrollLock = removeScrollLock;
 var lockBodyScroll = function () {
     var html = getHtml();
     var body = getBody();
-    addStyleOverride(html, lockStyle);
-    addStyleOverride(body, lockStyle);
+    addStyleOverride(html, lockStyleHTML);
+    addStyleOverride(body, lockStyleBody);
 };
 exports.lockBodyScroll = lockBodyScroll;
 var getLockContentScrollResizeObserver = function () {
